@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Boost BD — SMM Panel</title>
+  <title>Boost BD — Live SMM Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -27,7 +27,7 @@
         <h1 class="font-bold text-lg text-blue-600 flex items-center gap-1.5">
           <i class="fa-solid fa-bolt text-amber-500"></i> Boost BD
         </h1>
-        <p class="text-xs text-slate-400">Live SMM Panel</p>
+        <p class="text-xs text-slate-400">Live OpsFollow Sync</p>
       </div>
     </div>
 
@@ -92,6 +92,12 @@
   <!-- ================= MAIN CONTENT ================= -->
   <main class="max-w-lg mx-auto p-4">
 
+    <!-- Loading Banner -->
+    <div id="loadingBanner" class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-center space-x-2 mb-3">
+      <i class="fa-solid fa-spinner fa-spin text-amber-600"></i>
+      <span>OpsFollow থেকে লাইভ সার্ভিস লোড হচ্ছে, অনুগ্রহ করে একটু অপেক্ষা করুন...</span>
+    </div>
+
     <!-- VIEW 1: NEW ORDER -->
     <section id="viewNewOrder" class="space-y-4">
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
@@ -141,7 +147,7 @@
         <div>
           <div class="flex justify-between items-center mb-1.5">
             <label class="text-xs font-bold text-slate-600">Quantity (পরিমাণ)</label>
-            <span class="text-[11px] text-slate-400" id="minMaxHint">Min: 100 - Max: 10,000</span>
+            <span class="text-[11px] text-slate-400" id="minMaxHint">Min: -- | Max: --</span>
           </div>
           <input type="number" id="orderQuantity" oninput="calculatePrice()" placeholder="1000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
@@ -244,46 +250,64 @@
     </button>
   </nav>
 
-  <!-- ================= JAVASCRIPT & OPSFOLLOW LIVE API ================= -->
+  <!-- ================= JAVASCRIPT & LIVE OPSFOLLOW API ENGINE ================= -->
   <script>
-    // 🔥 আপনার OpsFollow API কনফিগারেশন সরাসরি যুক্ত করা হয়েছে
     const OPS_API_KEY = "b65dcf632cd78d24828aa19c100ccefd";
     const OPS_API_URL = "https://opsfollow.com/api/v2";
-    const CORS_PROXY = "https://corsproxy.io/?"; // ব্রাউজার ব্লকিং বাইপাস করার প্রক্সি
+    const CORS_PROXY = "https://corsproxy.io/?";
+    const USD_TO_BDT = 130; // ১ ডলার = ১৩০ টাকা
 
-    const tg = window.Telegram ? window.Telegram.WebApp : null;
-    if (tg) {
-      tg.ready();
-      tg.expand();
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        document.getElementById('userNameDisplay').innerText = tg.initDataUnsafe.user.first_name || "User";
-        document.getElementById('userIdDisplay').innerText = "ID: " + tg.initDataUnsafe.user.id;
-      }
-    }
-
-    const servicesData = {
-      facebook: [
-        { id: 31762, category: "Facebook Followers [Bot Data]", name: "Facebook Followers | Bot Data | Non Drop", rate: 125, min: 100, max: 50000 },
-        { id: 31776, category: "Facebook Followers [HQ Page]", name: "Facebook Followers | Non Drop | HQ Page", rate: 135, min: 100, max: 10000 },
-        { id: 31777, category: "Facebook Page Likes", name: "Facebook Page Likes + Followers | 30D Refill", rate: 145, min: 100, max: 20000 },
-        { id: 31780, category: "Facebook Post Likes", name: "Facebook Post Likes | Instant Start | Super Fast", rate: 45, min: 50, max: 50000 }
-      ],
-      instagram: [
-        { id: 31783, category: "Instagram Followers", name: "Instagram Real Followers | HQ Account", rate: 150, min: 100, max: 15000 },
-        { id: 31784, category: "Instagram Likes", name: "Instagram Post Likes | Instant Delivery", rate: 40, min: 50, max: 50000 }
-      ],
-      tiktok: [
-        { id: 31800, category: "TikTok Followers", name: "TikTok Followers | HQ Non Drop | 365D Refill", rate: 160, min: 100, max: 10000 },
-        { id: 31805, category: "TikTok Video Views", name: "TikTok Instant Views | Super Fast", rate: 15, min: 500, max: 1000000 }
-      ],
-      youtube: [
-        { id: 31810, category: "YouTube Subscribers", name: "YouTube Subscribers | Non Drop Guarantee", rate: 350, min: 100, max: 5000 },
-        { id: 31815, category: "YouTube Views", name: "YouTube Real Views | Lifetime Refill", rate: 110, min: 500, max: 500000 }
-      ]
-    };
-
+    let allServices = [];
     let currentPlatform = 'facebook';
     let userBalance = 500.00;
+
+    // নিরাপদ API কল ফাংশন (Direct + Proxy Fallback)
+    async function callOpsApi(postData) {
+      const formParams = new URLSearchParams(postData);
+
+      // ১. প্রথমে সরাসরি চেষ্টা করা
+      try {
+        const directRes = await fetch(OPS_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formParams
+        });
+        if (directRes.ok) return await directRes.json();
+      } catch (e) {
+        // Direct failed, will use proxy
+      }
+
+      // ২. সরাসরি না হলে প্রক্সি দিয়ে চেষ্টা করা
+      const proxyTarget = CORS_PROXY + encodeURIComponent(OPS_API_URL);
+      const proxyRes = await fetch(proxyTarget, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formParams
+      });
+      return await proxyRes.json();
+    }
+
+    // পেজ ওপেন হলেই OpsFollow থেকে সব আসল সার্ভিস লোড করা
+    async function loadAllServicesLive() {
+      const banner = document.getElementById('loadingBanner');
+      try {
+        const data = await callOpsApi({
+          key: OPS_API_KEY,
+          action: "services"
+        });
+
+        if (Array.isArray(data) && data.length > 0) {
+          allServices = data;
+          banner.classList.add('hidden');
+          selectPlatform('facebook');
+          populateServicesTable();
+        } else {
+          banner.innerHTML = '<span class="text-red-600">❌ সার্ভিস লোড হতে ব্যর্থ হয়েছে। কিছুক্ষণ পর রিফ্রেশ দিন।</span>';
+        }
+      } catch (err) {
+        banner.innerHTML = '<span class="text-red-600">❌ নেটওয়ার্ক ত্রুটি: লাইভ সার্ভিস আনা যায়নি।</span>';
+      }
+    }
 
     function selectPlatform(platform) {
       currentPlatform = platform;
@@ -299,35 +323,55 @@
       populateCategories();
     }
 
+    // নির্বাচিত প্ল্যাটফর্মের সব আসল ক্যাটাগরি ফিল্টার করা
     function populateCategories() {
-      const list = servicesData[currentPlatform] || [];
       const catSelect = document.getElementById('orderCategory');
       catSelect.innerHTML = '';
-      const uniqueCats = [...new Set(list.map(s => s.category))];
+
+      const filtered = allServices.filter(s => {
+        const cat = (s.category || '').toLowerCase();
+        const name = (s.name || '').toLowerCase();
+        return cat.includes(currentPlatform) || name.includes(currentPlatform);
+      });
+
+      const uniqueCats = [...new Set(filtered.map(s => s.category))];
+
+      if (uniqueCats.length === 0) {
+        const opt = document.createElement('option');
+        opt.innerText = "কোনো ক্যাটাগরি পাওয়া যায়নি";
+        catSelect.appendChild(opt);
+        return;
+      }
+
       uniqueCats.forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat;
         opt.innerText = cat;
         catSelect.appendChild(opt);
       });
+
       updateServices();
     }
 
+    // নির্বাচিত ক্যাটাগরির আসল সার্ভিসগুলো আনা
     function updateServices() {
       const selectedCat = document.getElementById('orderCategory').value;
-      const list = (servicesData[currentPlatform] || []).filter(s => s.category === selectedCat);
       const servSelect = document.getElementById('orderService');
       servSelect.innerHTML = '';
 
-      list.forEach(s => {
+      const services = allServices.filter(s => s.category === selectedCat);
+
+      services.forEach(s => {
         const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.dataset.rate = s.rate;
+        const bdtPrice = (parseFloat(s.rate) * USD_TO_BDT).toFixed(1);
+        opt.value = s.service;
+        opt.dataset.rate = bdtPrice;
         opt.dataset.min = s.min;
         opt.dataset.max = s.max;
-        opt.innerText = `${s.id} - ${s.name} (৳${s.rate}/1K)`;
+        opt.innerText = `${s.service} - ${s.name} (৳${bdtPrice}/1K)`;
         servSelect.appendChild(opt);
       });
+
       calculatePrice();
     }
 
@@ -337,7 +381,7 @@
       if (!selectedOpt) return;
 
       const rate = parseFloat(selectedOpt.dataset.rate || 0);
-      const min = selectedOpt.dataset.min || 100;
+      const min = selectedOpt.dataset.min || 1;
       const max = selectedOpt.dataset.max || 10000;
       document.getElementById('minMaxHint').innerText = `Min: ${min} - Max: ${max}`;
 
@@ -346,19 +390,31 @@
       document.getElementById('totalCostDisplay').innerText = `৳ ${total.toFixed(2)}`;
     }
 
-    // 🚀 সরাসরি OpsFollow API-তে লাইভ অর্ডার পাঠানোর ফাংশন
+    // সরাসরি OpsFollow API-তে লাইভ অর্ডার পাঠানো
     async function submitOrder() {
       const link = document.getElementById('orderLink').value.trim();
       const qty = parseInt(document.getElementById('orderQuantity').value);
       const servSelect = document.getElementById('orderService');
       const selectedOpt = servSelect.selectedOptions[0];
 
+      if (!selectedOpt) {
+        alert("❌ দয়া করে সার্ভিস নির্বাচন করুন!");
+        return;
+      }
+
+      const min = parseInt(selectedOpt.dataset.min || 1);
+      const max = parseInt(selectedOpt.dataset.max || 50000);
+
       if (!link || !link.startsWith('http')) {
         alert("❌ দয়া করে সঠিক লিংক দিন (https://...)!");
         return;
       }
-      if (!qty || qty <= 0) {
-        alert("❌ দয়া করে সঠিক পরিমাণ দিন!");
+      if (!qty || qty < min) {
+        alert(`❌ সর্বনিম্ন পরিমাণ ${min} দিতে হবে!`);
+        return;
+      }
+      if (qty > max) {
+        alert(`❌ সর্বোচ্চ পরিমাণ ${max} অতিক্রম করেছে!`);
         return;
       }
 
@@ -376,19 +432,13 @@
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> OpsFollow সার্ভারে পাঠানো হচ্ছে...';
 
       try {
-        const formData = new FormData();
-        formData.append("key", OPS_API_KEY);
-        formData.append("action", "add");
-        formData.append("service", serviceId);
-        formData.append("link", link);
-        formData.append("quantity", qty);
-
-        const response = await fetch(CORS_PROXY + encodeURIComponent(OPS_API_URL), {
-          method: "POST",
-          body: formData
+        const data = await callOpsApi({
+          key: OPS_API_KEY,
+          action: "add",
+          service: serviceId,
+          link: link,
+          quantity: qty
         });
-
-        const data = await response.json();
 
         if (data.order) {
           userBalance -= cost;
@@ -399,10 +449,6 @@
           document.getElementById('orderLink').value = '';
           document.getElementById('orderQuantity').value = '';
           calculatePrice();
-
-          if (tg) {
-            tg.sendData(JSON.stringify({ orderId: data.order, serviceId: serviceId, cost: cost }));
-          }
         } else if (data.error) {
           alert("❌ OpsFollow সার্ভার এরর: " + data.error);
         } else {
@@ -416,7 +462,7 @@
       }
     }
 
-    // 🔍 সরাসরি OpsFollow API থেকে লাইভ স্ট্যাটাস ট্র্যাকিং
+    // সরাসরি OpsFollow API থেকে লাইভ ট্র্যাকিং
     async function trackOrderLive() {
       const orderId = document.getElementById('trackInput').value.trim();
       const resDiv = document.getElementById('trackResult');
@@ -429,17 +475,11 @@
       resDiv.innerHTML = '<div class="text-center py-2 text-xs text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i> OpsFollow সার্ভার থেকে লাইভ চেক হচ্ছে...</div>';
 
       try {
-        const formData = new FormData();
-        formData.append("key", OPS_API_KEY);
-        formData.append("action", "status");
-        formData.append("order", orderId);
-
-        const response = await fetch(CORS_PROXY + encodeURIComponent(OPS_API_URL), {
-          method: "POST",
-          body: formData
+        const data = await callOpsApi({
+          key: OPS_API_KEY,
+          action: "status",
+          order: orderId
         });
-
-        const data = await response.json();
 
         if (data.status) {
           resDiv.innerHTML = `
@@ -547,22 +587,21 @@
     function populateServicesTable() {
       const tbody = document.getElementById('servicesTableBody');
       let rows = '';
-      Object.keys(servicesData).forEach(p => {
-        servicesData[p].forEach(s => {
-          rows += `<tr>
-            <td class="py-2 font-mono text-slate-500">${s.id}</td>
-            <td class="py-2 font-medium text-slate-700">${s.name}</td>
-            <td class="py-2 text-right font-bold text-blue-600">৳${s.rate}</td>
-          </tr>`;
-        });
+      allServices.slice(0, 50).forEach(s => {
+        const bdtPrice = (parseFloat(s.rate) * USD_TO_BDT).toFixed(1);
+        rows += `<tr>
+          <td class="py-2 font-mono text-slate-500">${s.service}</td>
+          <td class="py-2 font-medium text-slate-700">${s.name}</td>
+          <td class="py-2 text-right font-bold text-blue-600">৳${bdtPrice}</td>
+        </tr>`;
       });
       tbody.innerHTML = rows;
     }
 
-    // Init
-    selectPlatform('facebook');
-    populateServicesTable();
-    renderRecentOrders();
+    // অ্যাপ চালু হলেই OpsFollow থেকে লাইভ ফেচ শুরু হবে
+    window.onload = function() {
+      loadAllServicesLive();
+    };
   </script>
 </body>
-</html>
+        </html>
