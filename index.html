@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Boost BD — NextGen Social Cloud</title>
 
-  <!-- Google High-End Typography -->
+  <!-- Google Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
@@ -34,10 +34,10 @@
 </head>
 <body class="bg-[#F8FAFC] text-slate-800 min-h-screen pb-24 select-none custom-scrollbar">
 
-  <!-- ================= FLOATING TOAST ================= -->
+  <!-- ================= TOAST NOTIFICATION ================= -->
   <div id="toastContainer" class="fixed top-4 left-4 right-4 z-50 pointer-events-none flex flex-col items-center space-y-2"></div>
 
-  <!-- ================= LUXURY APP HEADER ================= -->
+  <!-- ================= TOP APP BAR ================= -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 flex items-center justify-between shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
     <div class="flex items-center space-x-3">
       <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-700 active:scale-95 transition shadow-xs">
@@ -119,7 +119,7 @@
     <!-- TAB 1: NEW ORDER SECTION -->
     <section id="viewNewOrder" class="space-y-4">
       
-      <!-- Platform Selector Grid (5 Platforms including Telegram) -->
+      <!-- Platform Selector Grid (5 Platforms) -->
       <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-sm">
         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">সোশ্যাল প্ল্যাটফর্ম নির্বাচন করুন</label>
         <div class="grid grid-cols-5 gap-1.5">
@@ -327,87 +327,52 @@
   <script>
     const API_KEY = "b65dcf632cd78d24828aa19c100ccefd";
     const API_URL = "https://opsfollow.com/api/v2";
-    const PROXY_URL = "https://cors.eu.org/";
+    const PROXY_URL = "https://corsproxy.io/?";
     const USD_TO_BDT = 130;
 
-    // 🔥 আপনার নির্দিষ্ট লাভ (Profit Formula) হিসাব
+    // আপনার প্রফিট ফর্মুলা হিসাব
     function calculateProfitRate(rawUsdRate) {
       const rawBdt = parseFloat(rawUsdRate) * USD_TO_BDT;
       let finalBdt = 0;
 
       if (rawBdt < 80) {
-        // ৮০ টাকার নিচে: ৯৫% লাভ
-        finalBdt = rawBdt * 1.95;
+        finalBdt = rawBdt * 1.95; // ৯৫% লাভ
       } else {
-        // ৮০ টাকা বা তার বেশি: ৫০% লাভ
-        finalBdt = rawBdt * 1.50;
+        finalBdt = rawBdt * 1.50; // ৫০% লাভ
       }
       return Math.ceil(finalBdt);
     }
 
-    // 🌟 আসল OpsFollow ওয়েবসাইটের বিশাল সার্ভিস ক্যাটালগ (আর ২-৪টা নয়, ডজন ডজন আসল সার্ভিস)
+    // মাস্টার সার্ভিস ডেটাবেজ
     const masterServicesList = [
-      // ================= 🔵 FACEBOOK SERVICES =================
       { id: 31827, platform: "facebook", category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Followers [Bangladeshi Real Profiles] S1", rate: "0.85", min: 100, max: 10000 },
       { id: 31828, platform: "facebook", category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Page Likes [Bangladeshi Targeted Users] S2", rate: "0.95", min: 100, max: 15000 },
-      { id: 31867, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Worldwide | Max 20k | 20k/Day ~ Instant | NO REFILL", rate: "0.09352", min: 100, max: 20000 },
-      { id: 31859, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Worldwide | Max 500k | 20k/Day ~ Instant | NO REFILL", rate: "0.0988", min: 50, max: 10000000 },
-      { id: 31776, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Non Drop | HQ Page | 10k/Day ~ instant | No Refill", rate: "0.12105", min: 100, max: 20000 },
-      { id: 31860, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Likes | Worldwide | High Quality", rate: "0.07072", min: 10, max: 1000000 },
+      { id: 31867, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Worldwide | Max 20k | 20k/Day ~ Instant", rate: "0.09352", min: 100, max: 20000 },
+      { id: 31776, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Non Drop | HQ Page", rate: "0.12105", min: 100, max: 20000 },
       { id: 31780, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Reactions [Love, Haha, Wow, Care] ~ Instant", rate: "0.35", min: 50, max: 50000 },
-      { id: 31866, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Angry / Sad | Worldwide | HQ | 50k/Day ~ instant", rate: "0.07072", min: 10, max: 1000000 },
-      { id: 31777, platform: "facebook", category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers + Likes | 30D Refill | Instant Start", rate: "0.12444", min: 100, max: 50000 },
-      { id: 31778, platform: "facebook", category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers | 60D Auto Refill Guarantee", rate: "0.14550", min: 100, max: 50000 },
-      { id: 31691, platform: "facebook", category: "Facebook Followers [ Bot Data ] Cheapest In The World", name: "Facebook Followers | Bot Data | Non Drop | 50k/Day ~ instant | No Refill", rate: "0.13279", min: 100, max: 1000000 },
-      { id: 31692, platform: "facebook", category: "Facebook Followers [ Bot Data ] Cheapest In The World", name: "Facebook Followers | Bot Data | Non Drop | 50k/Day ~ instant | 30D Refill", rate: "0.13652", min: 100, max: 1000000 },
-      { id: 31765, platform: "facebook", category: "Facebook Followers [Global] [Fast Speed]", name: "Facebook Followers [Global Fast Speed] 10K/Day ~ Instant", rate: "0.22", min: 100, max: 10000 },
-
-      // ================= 🟣 INSTAGRAM SERVICES =================
-      { id: 31431, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Followers | HQ | %100 Old Account | Low Drop | 30D Refill", rate: "2.42", min: 10, max: 10000000 },
-      { id: 31432, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Followers | HQ | %100 Old Account | Low Drop | 60D Refill", rate: "2.7104", min: 10, max: 10000000 },
-      { id: 31783, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Real Followers | HQ Account | 30D Auto Refill Guarantee", rate: "1.1495", min: 50, max: 20000 },
-      { id: 31742, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | 50k/Day ~ instant | No Refill", rate: "0.11561", min: 10, max: 1000000 },
-      { id: 31743, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | 50k/Day ~ instant | 30D Refill", rate: "0.13816", min: 10, max: 1000000 },
-      { id: 31744, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | 50k/Day ~ instant | LifeTime Refill", rate: "0.17391", min: 10, max: 1000000 },
+      { id: 31777, platform: "facebook", category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers + Likes | 30D Refill | Instant", rate: "0.12444", min: 100, max: 50000 },
+      
+      { id: 31431, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Followers | HQ | %100 Old Account | Low Drop", rate: "2.42", min: 10, max: 10000000 },
+      { id: 31783, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Real Followers | HQ Account | 30D Refill", rate: "1.1495", min: 50, max: 20000 },
+      { id: 31742, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | Instant", rate: "0.11561", min: 10, max: 1000000 },
       { id: 31784, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Post Likes | 100% Real | Non Drop ~ Instant", rate: "0.25", min: 50, max: 50000 },
-      { id: 31741, platform: "instagram", category: "Instagram Video Views [ High Speed ]", name: "Instagram Video Views | HQ | Max Unlimited | 100k/Day ~ instant", rate: "0.00079", min: 100, max: 100000000 },
-      { id: 30904, platform: "instagram", category: "Instagram Video Views [ High Speed ]", name: "Instagram Video Views | PROVIDER ~ Non Drop [ All Link ] ~ INSTANT", rate: "0.00059", min: 100, max: 2147483647 },
-      { id: 30905, platform: "instagram", category: "Instagram Engagement & Reach", name: "Instagram Save [ Max 100K ] | All Link | Instant", rate: "0.03889", min: 1, max: 10000000 },
-      { id: 30906, platform: "instagram", category: "Instagram Engagement & Reach", name: "Instagram Repost | HQ | Real People | 20k/Day ~ instant | 60D Refill", rate: "0.2915", min: 10, max: 100000 },
 
-      // ================= ⚫ TIKTOK SERVICES =================
-      { id: 31846, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | No Refill", rate: "1.54683", min: 5, max: 8000 },
-      { id: 31847, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | 30D Refill", rate: "1.88217", min: 5, max: 8000 },
-      { id: 31848, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | 60D Refill", rate: "2.21432", min: 5, max: 8000 },
-      { id: 31850, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | LifeTime Refill", rate: "2.7679", min: 5, max: 8000 },
+      { id: 31846, platform: "tiktok", category: "TikTok Followers [ Non Drop ]", name: "TikTok Followers | High Quality | Low/Non Drop", rate: "1.54683", min: 5, max: 8000 },
       { id: 31800, platform: "tiktok", category: "TikTok Followers [ Real Users ] [ Cheapest ]", name: "TikTok Followers | HQ | 365D Auto Refill Guarantee", rate: "2.42", min: 100, max: 10000 },
-      { id: 31845, platform: "tiktok", category: "TikTok Followers [ Real Users ] [ Cheapest ]", name: "TikTok Followers | HQ | Real Account | 50k/Day ~ instant | No Refill", rate: "0.69056", min: 10, max: 100000 },
-      { id: 31855, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | High Quality | Real Account | 50k/Day ~ instant | No Refill", rate: "0.28462", min: 50, max: 1000000 },
-      { id: 31789, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | HQ New Update | 100K/Day Instant", rate: "0.515", min: 50, max: 100000 },
-      { id: 31745, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | From Ads | Non Drop ~ High Speed", rate: "0.94039", min: 1000, max: 10000000 },
+      { id: 31855, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | High Quality | Real Account ~ Instant", rate: "0.28462", min: 50, max: 1000000 },
       { id: 31805, platform: "tiktok", category: "TikTok Views [ Instant Delivery ]", name: "TikTok Video Views | Ultra Fast Instant Delivery", rate: "0.03", min: 500, max: 1000000 },
 
-      // ================= 🔴 YOUTUBE SERVICES =================
-      { id: 31810, platform: "youtube", category: "YouTube Subscribers [ Non Drop Guarantee ]", name: "YouTube Subscribers | Real Active Users | Non Drop Guarantee", rate: "3.20", min: 100, max: 5000 },
-      { id: 31856, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | 20k/Day ~ instant | No Refill", rate: "0.21682", min: 100, max: 1000000 },
-      { id: 31857, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | 50k/Day ~ instant | No Refill", rate: "0.28909", min: 100, max: 1000000 },
-      { id: 31858, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | 10k/Day ~ instant | 30D Refill", rate: "0.35461", min: 100, max: 1000000 },
-      { id: 31815, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Views | High Retention | Monetizable | Lifetime Guarantee", rate: "0.95", min: 500, max: 500000 },
-      { id: 31747, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video Views | All Kind Of Links Accepted | 30 Days Refill", rate: "1.58788", min: 1000, max: 1000000 },
+      { id: 31810, platform: "youtube", category: "YouTube Subscribers [ Non Drop Guarantee ]", name: "YouTube Subscribers | Real Active Users | Non Drop", rate: "3.20", min: 100, max: 5000 },
+      { id: 31856, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | Instant", rate: "0.21682", min: 100, max: 1000000 },
+      { id: 31815, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Views | High Retention | Monetizable", rate: "0.95", min: 500, max: 500000 },
 
-      // ================= 🔷 TELEGRAM SERVICES =================
-      { id: 31735, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | No Refill", rate: "0.0968", min: 10, max: 1000000 },
-      { id: 31736, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 30D Refill", rate: "0.11616", min: 10, max: 1000000 },
-      { id: 31737, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 60D Refill", rate: "0.13552", min: 10, max: 1000000 },
-      { id: 31738, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 90D Refill", rate: "0.15488", min: 10, max: 1000000 },
-      { id: 31739, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 365D Refill", rate: "0.17424", min: 10, max: 1000000 },
-      { id: 31740, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | LifeTime Refill", rate: "0.1936", min: 10, max: 1000000 }
+      { id: 31735, platform: "telegram", category: "Telegram Members [Cheap] [High Speed]", name: "Telegram Members | High Quality | Instant", rate: "0.0968", min: 10, max: 1000000 },
+      { id: 31736, platform: "telegram", category: "Telegram Members [Cheap] [High Speed]", name: "Telegram Members | High Quality | 30D Refill", rate: "0.11616", min: 10, max: 1000000 }
     ];
 
     let currentPlatform = 'facebook';
     let userBalance = 0.00;
 
-    // পেজ ওপেন হওয়ার সাথে সাথে
     window.addEventListener('DOMContentLoaded', () => {
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
@@ -426,7 +391,6 @@
       updateBalance();
     });
 
-    // প্ল্যাটফর্ম সিলেকশন
     function selectPlatform(p) {
       currentPlatform = p;
       document.querySelectorAll('.platform-btn').forEach(btn => {
@@ -441,7 +405,6 @@
       populateCategories();
     }
 
-    // আসল ক্যাটাগরিগুলো ড্রপডাউনে বসানো
     function populateCategories() {
       const catSelect = document.getElementById('orderCategory');
       catSelect.innerHTML = '';
@@ -461,14 +424,13 @@
       updateServices();
     }
 
-    // ক্যাটাগরি অনুযায়ী সব সার্ভিস আনা
     function updateServices() {
       const selectedCat = document.getElementById('orderCategory').value;
       const servSelect = document.getElementById('orderService');
       servSelect.innerHTML = '';
 
       const services = masterServicesList.filter(s => s.category === selectedCat);
-      document.getElementById('badgeServiceCount').innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i>${services.length} টি সার্ভিস উপলভ্য`;
+      document.getElementById('badgeServiceCount').innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i>${services.length} টি সার্ভিস`;
 
       services.forEach(s => {
         const sellingPrice = calculateProfitRate(s.rate);
@@ -484,7 +446,6 @@
       calculatePrice();
     }
 
-    // লাইভ সার্চ
     function handleSearch() {
       const q = document.getElementById('liveSearchBox').value.toLowerCase().trim();
       if (!q) {
@@ -515,7 +476,6 @@
       calculatePrice();
     }
 
-    // লাইভ মূল্য ক্যালকুলেশন
     function calculatePrice() {
       const servSelect = document.getElementById('orderService');
       const opt = servSelect.selectedOptions[0];
@@ -531,7 +491,6 @@
       document.getElementById('totalCostDisplay').innerText = `৳ ${total.toFixed(2)}`;
     }
 
-    // সরাসরি OpsFollow API-তে লাইভ অর্ডার পাঠানো
     async function submitOrder() {
       const link = document.getElementById('orderLink').value.trim();
       const qty = parseInt(document.getElementById('orderQuantity').value);
@@ -568,7 +527,7 @@
           quantity: qty
         });
 
-        const res = await fetch(PROXY_URL + API_URL, {
+        const res = await fetch(PROXY_URL + encodeURIComponent(API_URL), {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: form
@@ -594,7 +553,6 @@
       }
     }
 
-    // লাইভ অর্ডার ট্র্যাকিং
     async function trackOrderLive() {
       const id = document.getElementById('trackInput').value.trim();
       const box = document.getElementById('trackResult');
@@ -612,7 +570,7 @@
           action: "status",
           order: id
         });
-        const res = await fetch(PROXY_URL + API_URL, {
+        const res = await fetch(PROXY_URL + encodeURIComponent(API_URL), {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: form
