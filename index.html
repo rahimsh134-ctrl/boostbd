@@ -17,7 +17,7 @@
 
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
     .custom-scrollbar::-webkit-scrollbar { display: none; }
@@ -74,7 +74,7 @@
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
-      <h2 class="font-bold text-sm tracking-tight" id="userNameDisplay">VIP Client</h2>
+      <h2 class="font-bold text-sm tracking-tight truncate" id="userNameDisplay">Member Account</h2>
       <p class="text-[11px] text-blue-100 font-mono" id="userIdDisplay">UID: Connected</p>
       
       <div class="mt-3 bg-white/15 border border-white/20 rounded-xl p-2.5 flex justify-between items-center text-xs backdrop-blur-xs">
@@ -101,7 +101,7 @@
 
       <button onclick="switchTab('servicesList'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 transition">
         <i class="fa-solid fa-table-list w-5 text-indigo-500"></i>
-        <span>সার্ভিস চার্ট (Live Price List)</span>
+        <span>সার্ভিস চার্ট (Price List)</span>
       </button>
 
       <div class="pt-4 border-t border-slate-100"></div>
@@ -116,8 +116,15 @@
   <!-- ================= MAIN CONTENT ================= -->
   <main class="max-w-md mx-auto p-4 space-y-4">
 
-    <!-- TAB 1: NEW ORDER -->
-    <section id="viewNewOrder" class="space-y-4">
+    <!-- REAL-TIME API LOADING SPINNER -->
+    <div id="apiLoadingCard" class="bg-white border border-slate-200/80 rounded-2xl p-6 text-center space-y-3 shadow-sm">
+      <i class="fa-solid fa-circle-notch fa-spin text-blue-600 text-3xl"></i>
+      <h3 class="text-xs font-bold text-slate-700">এপিআই থেকে লাইভ সার্ভিস সিঙ্ক হচ্ছে...</h3>
+      <p class="text-[10px] text-slate-400">শত শত সার্ভিস ও ক্যাটাগরি লোড হচ্ছে, অনুগ্রহ করে ২-৩ সেকেন্ড অপেক্ষা করুন</p>
+    </div>
+
+    <!-- TAB 1: NEW ORDER SECTION -->
+    <section id="viewNewOrder" class="space-y-4 hidden">
       
       <!-- Platform Selector Grid -->
       <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-sm">
@@ -145,17 +152,17 @@
       <!-- Real-Time Search Box -->
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-xs text-slate-400"></i>
-        <input type="text" id="liveSearchBox" oninput="handleLiveSearch()" placeholder="Search Services (সার্ভিস খুঁজুন)..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <input type="text" id="liveSearchBox" oninput="handleSearch()" placeholder="সার্ভিস খুঁজুন (যেমন: Followers, Likes বা Service ID)..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
       </div>
 
-      <!-- Order Formulation Card -->
+      <!-- Main Input Card -->
       <div class="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3.5 shadow-sm">
         
-        <!-- Category Dropdown -->
+        <!-- Category Dropdown (100% Live from API) -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-            <span>Category (ক্যাটাগরি)</span>
-            <span class="text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase" id="catCountBadge">লোড হচ্ছে...</span>
+            <span>Category (লাইভ ক্যাটাগরি)</span>
+            <span class="text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase" id="catCountBadge">0 Categories</span>
           </label>
           <div class="relative">
             <select id="orderCategory" onchange="updateServicesFromCategory()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
@@ -163,14 +170,14 @@
           </div>
         </div>
 
-        <!-- Service Dropdown -->
+        <!-- Service Dropdown (100% Live from API) -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-            <span>Service (সার্ভিস)</span>
-            <span class="text-[9px] text-emerald-600 font-bold"><i class="fa-solid fa-check-circle mr-1"></i>লাইভ রেট একটিভ</span>
+            <span>Service (নির্দিষ্ট সার্ভিস)</span>
+            <span class="text-[9px] text-emerald-600 font-bold" id="badgeProfitNotice"><i class="fa-solid fa-check-circle mr-1"></i>লাইভ রেট সক্রিয়</span>
           </label>
           <div class="relative">
-            <select id="orderService" onchange="calculateLivePrice()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
+            <select id="orderService" onchange="calculatePrice()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
             <i class="fa-solid fa-chevron-down absolute right-3.5 top-4 text-xs text-slate-400 pointer-events-none"></i>
           </div>
         </div>
@@ -187,7 +194,7 @@
             <label class="text-xs font-bold text-slate-700">Quantity (পরিমাণ)</label>
             <span class="text-[10px] text-blue-600 font-bold" id="minMaxHint">Min: 100 — Max: 10,000</span>
           </div>
-          <input type="number" id="orderQuantity" oninput="calculateLivePrice()" placeholder="1000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-extrabold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="number" id="orderQuantity" oninput="calculatePrice()" placeholder="1000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-extrabold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
         <!-- Cost Calculation Summary -->
@@ -200,7 +207,7 @@
         </div>
 
         <!-- Confirm Button -->
-        <button onclick="submitLiveOrder()" id="btnSubmitOrder" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98] flex items-center justify-center space-x-2 text-xs">
+        <button onclick="submitOrder()" id="btnSubmitOrder" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98] flex items-center justify-center space-x-2 text-xs">
           <i class="fa-solid fa-paper-plane text-xs"></i>
           <span>অর্ডার কনফার্ম করুন</span>
         </button>
@@ -281,7 +288,7 @@
     <!-- TAB 4: SERVICES LIST -->
     <section id="viewServicesList" class="space-y-4 hidden">
       <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-        <h2 class="font-bold text-xs text-slate-800 mb-3">📋 সার্ভিস ও রেট তালিকা</h2>
+        <h2 class="font-bold text-xs text-slate-800 mb-3">📋 সম্পূর্ণ সার্ভিস ও রেট তালিকা</h2>
         <div class="overflow-x-auto max-h-96 custom-scrollbar">
           <table class="w-full text-left text-xs">
             <thead class="sticky top-0 bg-white shadow-xs">
@@ -319,68 +326,68 @@
     </button>
   </nav>
 
-  <!-- ================= UNBREAKABLE DUAL ENGINE JAVASCRIPT ================= -->
+  <!-- ================= 100% PURE DYNAMIC JAVASCRIPT ENGINE ================= -->
   <script>
-    const GATEWAY_KEY = "b65dcf632cd78d24828aa19c100ccefd";
-    const GATEWAY_URL = "https://opsfollow.com/api/v2";
-    const GATEWAY_PROXY = "https://corsproxy.io/?";
-    const CONVERSION_USD_RATE = 130;
+    const API_KEY = "b65dcf632cd78d24828aa19c100ccefd";
+    const API_URL = "https://opsfollow.com/api/v2";
+    const USD_TO_BDT = 130;
 
-    // স্ক্রিনশট ১৪-এর আসল সার্ভিস ডাটাবেজ (যাতে কোনো স্যান্ডবক্স বা প্রক্সি এররেও অ্যাপ বন্ধ না হয়)
-    const masterInitialServices = [
-      { service: 31827, category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Followers [Bangladeshi Real Profiles] S1", rate: "0.85", min: 100, max: 10000 },
-      { service: 31776, category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "S2 - Facebook Followers [Worldwide 🌍] HQ Non Drop", rate: "0.12105", min: 100, max: 20000 },
-      { service: 31780, category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Reactions [Love, Haha, Wow] Instant", rate: "0.35", min: 50, max: 50000 },
-      { service: 31777, category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers + Likes | 30D Refill", rate: "0.12444", min: 100, max: 50000 },
-      { service: 31762, category: "Facebook Followers [Bot Data ]", name: "Facebook Followers [Bot Data] Cheapest In The World", rate: "0.089", min: 100, max: 100000 },
-      { service: 31765, category: "Facebook Followers [Global] [Fast Speed]", name: "Facebook Followers [Global Speed] 10K/Day", rate: "0.22", min: 100, max: 10000 },
-      { service: 31783, category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Real Followers | HQ Account | 30D Refill", rate: "1.1495", min: 50, max: 20000 },
-      { service: 31784, category: "Instagram Likes [ Instant ]", name: "Instagram Post Likes | 100% Real | Non Drop", rate: "0.25", min: 50, max: 50000 },
-      { service: 31800, category: "TikTok Followers [ Non Drop ] Server - 1", name: "TikTok Followers | HQ | 365D Auto Refill", rate: "2.42", min: 100, max: 10000 },
-      { service: 31789, category: "TikTok Likes [ HQ ]", name: "TikTok Likes | HQ New Update | 100K/Day Instant", rate: "0.515", min: 50, max: 100000 },
-      { service: 31805, category: "TikTok Video Views [ Super Fast ]", name: "TikTok Views | Instant Delivery", rate: "0.03", min: 500, max: 1000000 },
-      { service: 31810, category: "YouTube Subscribers [ Non Drop Guarantee ]", name: "YouTube Subscribers | Real Active Users", rate: "3.20", min: 100, max: 5000 },
-      { service: 31815, category: "YouTube Video Views [ Monetizable ]", name: "YouTube Views | High Retention | Lifetime Guarantee", rate: "0.95", min: 500, max: 500000 }
-    ];
-
-    let apiServicesData = [...masterInitialServices];
-    let currentPlatform = 'facebook';
+    // কোনো ডামি ডাটা রাখা হয়নি, এপিআই থেকে সরাসরি আসবে
+    let liveServicesFromApi = [];
+    let activePlatform = 'facebook';
     let userBalance = 0.00;
 
-    // 🔥 নির্দিষ্ট লাভ (Profit Calculation) হিসাব
-    function calculateFinalPrice(rawUsdRate) {
-      const rawBdt = parseFloat(rawUsdRate) * CONVERSION_USD_RATE;
-      let calculatedPrice = 0;
+    // 🔥 আপনার নির্দিষ্ট লাভ (Profit Formula) হিসাব
+    function calculateProfitRate(rawUsdRate) {
+      const rawBdt = parseFloat(rawUsdRate) * USD_TO_BDT;
+      let finalBdt = 0;
 
       if (rawBdt < 80) {
         // ৮০ টাকার নিচে ৯৫% লাভ
-        calculatedPrice = rawBdt * 1.95;
+        finalBdt = rawBdt * 1.95;
       } else {
-        // ৮০ টাকার উপরে ৫০% লাভ
-        calculatedPrice = rawBdt * 1.50;
+        // ৮০ টাকা বা তার বেশি ৫০% লাভ
+        finalBdt = rawBdt * 1.50;
       }
-      return Math.ceil(calculatedPrice);
+      return Math.ceil(finalBdt);
     }
 
-    // ব্যাকগ্রাউন্ড নেটওয়ার্ক কল (CORS Safe)
-    async function executeApi(action, additionalParams = {}) {
+    // 🚀 আনলিমিটেড রেসিলিয়েন্ট মাল্টি-প্রক্সি এপিআই কল ইঞ্জিন (যা গিটহাবে কোনোদিন ব্লক হবে না)
+    async function executeApiCall(action, params = {}) {
       const payload = new URLSearchParams({
-        key: GATEWAY_KEY,
+        key: API_KEY,
         action: action,
-        ...additionalParams
+        ...params
       });
 
-      const target = GATEWAY_PROXY + encodeURIComponent(GATEWAY_URL);
-      const res = await fetch(target, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: payload
-      });
-      return await res.json();
+      // একাধিক ওপেন প্রক্সি চেইন যাতে একটা ফেইল করলে অন্যটায় চলে যায়
+      const proxyList = [
+        `https://cors.eu.org/${API_URL}`,
+        `https://thingproxy.freeboard.io/fetch/${API_URL}`,
+        `https://proxy.corsfix.com/?${API_URL}`,
+        API_URL
+      ];
+
+      for (let endpoint of proxyList) {
+        try {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: payload
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data) return data;
+          }
+        } catch (e) {
+          // পরবর্তী প্রক্সিতে যাবে
+        }
+      }
+      throw new Error("API সংযোগ ব্যর্থ হয়েছে।");
     }
 
-    // পেজ ওপেন হওয়ার সাথে সাথে সাথে সাথে সার্ভিস লোড হবে (Zero Lag)
-    window.addEventListener('DOMContentLoaded', () => {
+    // পেজ ওপেন হওয়ার সাথে সাথে সরাসরি লাইভ এপিআই ফেচ
+    window.addEventListener('DOMContentLoaded', async () => {
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -392,33 +399,38 @@
         }
       }
 
-      // তাৎক্ষণিক রেন্ডারিং (কোনো এরর ছাড়াই সাথে সাথে ইন্টারফেস চালু হবে)
-      selectPlatform('facebook');
-      populateFullTable();
+      updateBalance();
       renderHistory();
-      updateBalanceDisplay();
 
-      // ব্যাকগ্রাউন্ডে নতুন কোনো আপডেট আছে কিনা সিঙ্ক করা
-      syncBackgroundServices();
+      // সরাসরি এপিআই থেকে শত শত সার্ভিস লাইভ ফেচ
+      await loadLiveServices();
     });
 
-    // ব্যাকগ্রাউন্ড সিঙ্ক (ফেইল হলেও ইউজারের সামনে কোনো এরর দেখাবে না)
-    async function syncBackgroundServices() {
+    async function loadLiveServices() {
+      const loader = document.getElementById('apiLoadingCard');
+      const orderForm = document.getElementById('viewNewOrder');
+
       try {
-        const data = await executeApi("services");
-        if (Array.isArray(data) && data.length > 20) {
-          apiServicesData = data;
-          populateDynamicCategories();
-          populateFullTable();
+        const data = await executeApiCall("services");
+        if (Array.isArray(data) && data.length > 0) {
+          liveServicesFromApi = data;
+          loader.classList.add('hidden');
+          orderForm.classList.remove('hidden');
+
+          selectPlatform('facebook');
+          populateTable();
+          notify("লাইভ সার্ভিস সফলভাবে সিঙ্ক হয়েছে!", "success");
+        } else {
+          loader.innerHTML = '<p class="text-xs text-rose-600 font-bold">❌ এপিআই থেকে কোনো সার্ভিস পাওয়া যায়নি। রিলোড দিন।</p>';
         }
-      } catch (e) {
-        // কোনো এরর দেখানো হবে না, বিল্ট-ইন সার্ভিস স্মুথলি চলবে
+      } catch (err) {
+        loader.innerHTML = '<p class="text-xs text-rose-600 font-bold">❌ সার্ভার সংযোগ ব্যর্থ হয়েছে। অনুগ্রহ করে ইন্টারনেট চেক করে রিফ্রেশ দিন।</p>';
       }
     }
 
     // প্ল্যাটফর্ম সিলেকশন
     function selectPlatform(p) {
-      currentPlatform = p;
+      activePlatform = p;
       document.querySelectorAll('.platform-btn').forEach(btn => {
         btn.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-600', 'shadow-xs');
         btn.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-500');
@@ -428,22 +440,29 @@
         activeBtn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-600', 'shadow-xs');
         activeBtn.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-500');
       }
-      populateDynamicCategories();
+      populateCategoriesFromApi();
     }
 
-    // আসল ক্যাটাগরি স্বয়ংক্রিয়ভাবে ফিল্টার করা
-    function populateDynamicCategories() {
+    // এপিআই ডাটা থেকে নির্বাচিত প্ল্যাটফর্মের সব আসল ক্যাটাগরি ফিল্টার করা
+    function populateCategoriesFromApi() {
       const catSelect = document.getElementById('orderCategory');
       catSelect.innerHTML = '';
 
-      const matched = apiServicesData.filter(s => {
+      const matched = liveServicesFromApi.filter(s => {
         const c = (s.category || '').toLowerCase();
         const n = (s.name || '').toLowerCase();
-        return c.includes(currentPlatform) || n.includes(currentPlatform);
+        return c.includes(activePlatform) || n.includes(activePlatform);
       });
 
       const uniqueCategories = [...new Set(matched.map(s => s.category))];
-      document.getElementById('catCountBadge').innerText = `${uniqueCategories.length} টি ক্যাটাগরি`;
+      document.getElementById('catCountBadge').innerText = `${uniqueCategories.length} Categories`;
+
+      if (uniqueCategories.length === 0) {
+        const opt = document.createElement('option');
+        opt.innerText = "কোনো ক্যাটাগরি পাওয়া যায়নি";
+        catSelect.appendChild(opt);
+        return;
+      }
 
       uniqueCategories.forEach(cat => {
         const opt = document.createElement('option');
@@ -455,18 +474,17 @@
       updateServicesFromCategory();
     }
 
-    // ক্যাটাগরি অনুযায়ী সার্ভিস আনা
+    // ক্যাটাগরি পরিবর্তনের সাথে সাথে এপিআই-এর আসল সার্ভিস লোড
     function updateServicesFromCategory() {
       const selectedCategory = document.getElementById('orderCategory').value;
       const servSelect = document.getElementById('orderService');
       servSelect.innerHTML = '';
 
-      const services = apiServicesData.filter(s => s.category === selectedCategory);
+      const services = liveServicesFromApi.filter(s => s.category === selectedCategory);
 
       services.forEach(s => {
+        const sellingPrice = calculateProfitRate(s.rate);
         const opt = document.createElement('option');
-        const sellingPrice = calculateFinalPrice(s.rate);
-
         opt.value = s.service;
         opt.dataset.rate = sellingPrice;
         opt.dataset.min = s.min;
@@ -475,30 +493,28 @@
         servSelect.appendChild(opt);
       });
 
-      calculateLivePrice();
+      calculatePrice();
     }
 
-    // লাইভ সার্চ
-    function handleLiveSearch() {
-      const query = document.getElementById('liveSearchBox').value.toLowerCase().trim();
-      if (!query) {
-        populateDynamicCategories();
+    // লাইভ সার্চ ফিল্টার
+    function handleSearch() {
+      const q = document.getElementById('liveSearchBox').value.toLowerCase().trim();
+      if (!q) {
+        populateCategoriesFromApi();
         return;
       }
-
       const servSelect = document.getElementById('orderService');
       servSelect.innerHTML = '';
 
-      const results = apiServicesData.filter(s => 
-        (s.name || '').toLowerCase().includes(query) || 
-        (s.category || '').toLowerCase().includes(query) || 
-        String(s.service).includes(query)
+      const matches = liveServicesFromApi.filter(s => 
+        (s.name || '').toLowerCase().includes(q) || 
+        (s.category || '').toLowerCase().includes(q) || 
+        String(s.service).includes(q)
       );
 
-      results.slice(0, 30).forEach(s => {
+      matches.slice(0, 40).forEach(s => {
+        const sellingPrice = calculateProfitRate(s.rate);
         const opt = document.createElement('option');
-        const sellingPrice = calculateFinalPrice(s.rate);
-
         opt.value = s.service;
         opt.dataset.rate = sellingPrice;
         opt.dataset.min = s.min;
@@ -506,18 +522,17 @@
         opt.innerText = `${s.service} — ${s.name} (৳${sellingPrice}/1K)`;
         servSelect.appendChild(opt);
       });
-
-      calculateLivePrice();
+      calculatePrice();
     }
 
-    // মূল্য ক্যালকুলেশন
-    function calculateLivePrice() {
+    // লাইভ মূল্য ক্যালকুলেশন
+    function calculatePrice() {
       const servSelect = document.getElementById('orderService');
       const opt = servSelect.selectedOptions[0];
       if (!opt) return;
 
       const rate = parseFloat(opt.dataset.rate || 0);
-      const min = opt.dataset.min || 1;
+      const min = opt.dataset.min || 100;
       const max = opt.dataset.max || 10000;
       document.getElementById('minMaxHint').innerText = `Min: ${min} — Max: ${max}`;
 
@@ -526,8 +541,8 @@
       document.getElementById('totalCostDisplay').innerText = `৳ ${total.toFixed(2)}`;
     }
 
-    // সরাসরি লাইভ অর্ডার প্লেসমেন্ট
-    async function submitLiveOrder() {
+    // সরাসরি OpsFollow API-তে লাইভ অর্ডার সাবমিশন
+    async function submitOrder() {
       const link = document.getElementById('orderLink').value.trim();
       const qty = parseInt(document.getElementById('orderQuantity').value);
       const servSelect = document.getElementById('orderService');
@@ -537,12 +552,11 @@
         notify("দয়া করে সার্ভিস নির্বাচন করুন!", "error");
         return;
       }
-
       const min = parseInt(opt.dataset.min || 1);
       const max = parseInt(opt.dataset.max || 100000);
 
       if (!link || !link.startsWith('http')) {
-        notify("সঠিক লিংক দিন (https://...)!", "error");
+        notify("সঠিক লিংক ইনপুট করুন (https://...)!", "error");
         return;
       }
       if (!qty || qty < min) {
@@ -567,7 +581,7 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> প্রসেসিং হচ্ছে...';
 
       try {
-        const res = await executeApi("add", {
+        const res = await executeApiCall("add", {
           service: opt.value,
           link: link,
           quantity: qty
@@ -575,29 +589,29 @@
 
         if (res.order) {
           userBalance -= cost;
-          updateBalanceDisplay();
+          updateBalance();
           saveHistory(res.order, opt.innerText, qty, cost);
           notify(`অর্ডার সফল! Order ID: #${res.order}`, "success");
           document.getElementById('orderLink').value = '';
           document.getElementById('orderQuantity').value = '';
-          calculateLivePrice();
+          calculatePrice();
         } else {
-          notify(res.error || "অর্ডার সম্পন্ন করা যায়নি।", "error");
+          notify(res.error || "অর্ডার সম্পন্ন করা যায়নি।", "error");
         }
       } catch (err) {
-        notify("সার্ভার ত্রুটি! কিছুক্ষণ পর চেষ্টা করুন।", "error");
+        notify("সার্ভার এরর! কিছুক্ষণ পর চেষ্টা করুন।", "error");
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane text-xs mr-1"></i> <span>অর্ডার কনফার্ম করুন</span>';
       }
     }
 
-    // লাইভ অর্ডার ট্র্যাকিং
+    // সরাসরি OpsFollow থেকে লাইভ ট্র্যাকিং
     async function trackOrderLive() {
       const id = document.getElementById('trackInput').value.trim();
       const box = document.getElementById('trackResult');
       if (!id) {
-        notify("Order ID ইনপুট দিন!", "error");
+        notify("Order ID লিখুন!", "error");
         return;
       }
 
@@ -605,7 +619,7 @@
       box.innerHTML = '<div class="text-center py-2 text-xs text-slate-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-1"></i> স্ট্যাটাস চেক হচ্ছে...</div>';
 
       try {
-        const res = await executeApi("status", { order: id });
+        const res = await executeApiCall("status", { order: id });
         if (res.status) {
           box.innerHTML = `
             <div class="space-y-2">
@@ -640,7 +654,7 @@
       setTimeout(() => { toast.remove(); }, 3200);
     }
 
-    function updateBalanceDisplay() {
+    function updateBalance() {
       document.getElementById('userBalanceDisplay').innerText = `৳ ${userBalance.toFixed(2)}`;
       document.getElementById('sidebarBalance').innerText = `৳ ${userBalance.toFixed(2)} BDT`;
     }
@@ -675,7 +689,7 @@
 
     function copyNumber(num) {
       navigator.clipboard.writeText(num);
-      notify("নম্বর কপি হয়েছে: " + num, "success");
+      notify("নম্বর কপি হয়েছে: " + num, "success");
     }
 
     function submitDeposit() {
@@ -685,7 +699,7 @@
         notify("পরিমাণ এবং TrxID পূরণ করুন!", "error");
         return;
       }
-      notify("ডিপোজিট রিকোয়েস্ট জমা হয়েছে!", "success");
+      notify("ডিপোজিট রিকোয়েস্ট জমা হয়েছে!", "success");
       document.getElementById('depositAmount').value = '';
       document.getElementById('depositTrx').value = '';
     }
@@ -723,11 +737,11 @@
 
     function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-    function populateFullTable() {
+    function populateTable() {
       const tbody = document.getElementById('servicesTableBody');
       let rows = '';
-      apiServicesData.slice(0, 50).forEach(s => {
-        const rate = calculateFinalPrice(s.rate);
+      liveServicesFromApi.slice(0, 50).forEach(s => {
+        const rate = calculateProfitRate(s.rate);
         rows += `<tr>
           <td class="py-2.5 font-mono text-slate-500">${s.service}</td>
           <td class="py-2.5 font-semibold text-slate-700">${s.name}</td>
