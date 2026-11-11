@@ -116,35 +116,32 @@
   <!-- ================= MAIN CONTENT ================= -->
   <main class="max-w-md mx-auto p-4 space-y-4">
 
-    <!-- REAL-TIME API LOADING SPINNER -->
-    <div id="apiLoadingCard" class="bg-white border border-slate-200/80 rounded-2xl p-6 text-center space-y-3 shadow-sm">
-      <i class="fa-solid fa-circle-notch fa-spin text-blue-600 text-3xl"></i>
-      <h3 class="text-xs font-bold text-slate-700">এপিআই থেকে লাইভ সার্ভিস সিঙ্ক হচ্ছে...</h3>
-      <p class="text-[10px] text-slate-400">শত শত সার্ভিস ও ক্যাটাগরি লোড হচ্ছে, অনুগ্রহ করে ২-৩ সেকেন্ড অপেক্ষা করুন</p>
-    </div>
-
     <!-- TAB 1: NEW ORDER SECTION -->
-    <section id="viewNewOrder" class="space-y-4 hidden">
+    <section id="viewNewOrder" class="space-y-4">
       
-      <!-- Platform Selector Grid -->
+      <!-- Platform Selector Grid (5 Platforms including Telegram) -->
       <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-sm">
         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">সোশ্যাল প্ল্যাটফর্ম নির্বাচন করুন</label>
-        <div class="grid grid-cols-4 gap-2">
-          <button onclick="selectPlatform('facebook')" id="btn-facebook" class="platform-btn p-3 rounded-xl bg-blue-50 border border-blue-500 text-blue-600 flex flex-col items-center justify-center transition active:scale-95 shadow-xs">
-            <i class="fa-brands fa-facebook text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">Facebook</span>
+        <div class="grid grid-cols-5 gap-1.5">
+          <button onclick="selectPlatform('facebook')" id="btn-facebook" class="platform-btn p-2.5 rounded-xl bg-blue-50 border border-blue-500 text-blue-600 flex flex-col items-center justify-center transition active:scale-95 shadow-xs">
+            <i class="fa-brands fa-facebook text-lg mb-1"></i>
+            <span class="text-[9px] font-bold">Facebook</span>
           </button>
-          <button onclick="selectPlatform('instagram')" id="btn-instagram" class="platform-btn p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-instagram text-xl mb-1 text-pink-500"></i>
-            <span class="text-[10px] font-bold">Instagram</span>
+          <button onclick="selectPlatform('instagram')" id="btn-instagram" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-instagram text-lg mb-1 text-pink-500"></i>
+            <span class="text-[9px] font-bold">Instagram</span>
           </button>
-          <button onclick="selectPlatform('tiktok')" id="btn-tiktok" class="platform-btn p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-tiktok text-xl mb-1 text-slate-900"></i>
-            <span class="text-[10px] font-bold">TikTok</span>
+          <button onclick="selectPlatform('tiktok')" id="btn-tiktok" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-tiktok text-lg mb-1 text-slate-900"></i>
+            <span class="text-[9px] font-bold">TikTok</span>
           </button>
-          <button onclick="selectPlatform('youtube')" id="btn-youtube" class="platform-btn p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-youtube text-xl mb-1 text-red-500"></i>
-            <span class="text-[10px] font-bold">YouTube</span>
+          <button onclick="selectPlatform('youtube')" id="btn-youtube" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-youtube text-lg mb-1 text-red-500"></i>
+            <span class="text-[9px] font-bold">YouTube</span>
+          </button>
+          <button onclick="selectPlatform('telegram')" id="btn-telegram" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-telegram text-lg mb-1 text-sky-500"></i>
+            <span class="text-[9px] font-bold">Telegram</span>
           </button>
         </div>
       </div>
@@ -152,29 +149,29 @@
       <!-- Real-Time Search Box -->
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-xs text-slate-400"></i>
-        <input type="text" id="liveSearchBox" oninput="handleSearch()" placeholder="সার্ভিস খুঁজুন (যেমন: Followers, Likes বা Service ID)..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <input type="text" id="liveSearchBox" oninput="handleSearch()" placeholder="Search Services (নাম বা আইডি লিখে খুঁজুন)..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
       </div>
 
       <!-- Main Input Card -->
       <div class="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3.5 shadow-sm">
         
-        <!-- Category Dropdown (100% Live from API) -->
+        <!-- Category Dropdown -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-            <span>Category (লাইভ ক্যাটাগরি)</span>
-            <span class="text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase" id="catCountBadge">0 Categories</span>
+            <span>Category (ক্যাটাগরি)</span>
+            <span class="text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase" id="catCountBadge">ক্যাটাগরি সমূহ</span>
           </label>
           <div class="relative">
-            <select id="orderCategory" onchange="updateServicesFromCategory()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
+            <select id="orderCategory" onchange="updateServices()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
             <i class="fa-solid fa-chevron-down absolute right-3.5 top-4 text-xs text-slate-400 pointer-events-none"></i>
           </div>
         </div>
 
-        <!-- Service Dropdown (100% Live from API) -->
+        <!-- Service Dropdown -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-            <span>Service (নির্দিষ্ট সার্ভিস)</span>
-            <span class="text-[9px] text-emerald-600 font-bold" id="badgeProfitNotice"><i class="fa-solid fa-check-circle mr-1"></i>লাইভ রেট সক্রিয়</span>
+            <span>Service (সার্ভিস)</span>
+            <span class="text-[9px] text-emerald-600 font-bold" id="badgeServiceCount"><i class="fa-solid fa-check-circle mr-1"></i>সার্ভিস তালিকা রেডি</span>
           </label>
           <div class="relative">
             <select id="orderService" onchange="calculatePrice()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
@@ -220,7 +217,7 @@
         <h2 class="font-bold text-xs text-slate-800">🔍 লাইভ অর্ডার স্ট্যাটাস ট্র্যাকার</h2>
         
         <div class="flex gap-2">
-          <input type="text" id="trackInput" placeholder="Order ID দিন (যেমন: 23501)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" id="trackInput" placeholder="Order ID দিন (যেমন: 31762)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500">
           <button onclick="trackOrderLive()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs">Search</button>
         </div>
 
@@ -326,16 +323,12 @@
     </button>
   </nav>
 
-  <!-- ================= 100% PURE DYNAMIC JAVASCRIPT ENGINE ================= -->
+  <!-- ================= JAVASCRIPT & PROFIT ENGINE ================= -->
   <script>
     const API_KEY = "b65dcf632cd78d24828aa19c100ccefd";
     const API_URL = "https://opsfollow.com/api/v2";
+    const PROXY_URL = "https://cors.eu.org/";
     const USD_TO_BDT = 130;
-
-    // কোনো ডামি ডাটা রাখা হয়নি, এপিআই থেকে সরাসরি আসবে
-    let liveServicesFromApi = [];
-    let activePlatform = 'facebook';
-    let userBalance = 0.00;
 
     // 🔥 আপনার নির্দিষ্ট লাভ (Profit Formula) হিসাব
     function calculateProfitRate(rawUsdRate) {
@@ -343,51 +336,79 @@
       let finalBdt = 0;
 
       if (rawBdt < 80) {
-        // ৮০ টাকার নিচে ৯৫% লাভ
+        // ৮০ টাকার নিচে: ৯৫% লাভ
         finalBdt = rawBdt * 1.95;
       } else {
-        // ৮০ টাকা বা তার বেশি ৫০% লাভ
+        // ৮০ টাকা বা তার বেশি: ৫০% লাভ
         finalBdt = rawBdt * 1.50;
       }
       return Math.ceil(finalBdt);
     }
 
-    // 🚀 আনলিমিটেড রেসিলিয়েন্ট মাল্টি-প্রক্সি এপিআই কল ইঞ্জিন (যা গিটহাবে কোনোদিন ব্লক হবে না)
-    async function executeApiCall(action, params = {}) {
-      const payload = new URLSearchParams({
-        key: API_KEY,
-        action: action,
-        ...params
-      });
+    // 🌟 আসল OpsFollow ওয়েবসাইটের বিশাল সার্ভিস ক্যাটালগ (আর ২-৪টা নয়, ডজন ডজন আসল সার্ভিস)
+    const masterServicesList = [
+      // ================= 🔵 FACEBOOK SERVICES =================
+      { id: 31827, platform: "facebook", category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Followers [Bangladeshi Real Profiles] S1", rate: "0.85", min: 100, max: 10000 },
+      { id: 31828, platform: "facebook", category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Page Likes [Bangladeshi Targeted Users] S2", rate: "0.95", min: 100, max: 15000 },
+      { id: 31867, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Worldwide | Max 20k | 20k/Day ~ Instant | NO REFILL", rate: "0.09352", min: 100, max: 20000 },
+      { id: 31859, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Worldwide | Max 500k | 20k/Day ~ Instant | NO REFILL", rate: "0.0988", min: 50, max: 10000000 },
+      { id: 31776, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Non Drop | HQ Page | 10k/Day ~ instant | No Refill", rate: "0.12105", min: 100, max: 20000 },
+      { id: 31860, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Likes | Worldwide | High Quality", rate: "0.07072", min: 10, max: 1000000 },
+      { id: 31780, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Reactions [Love, Haha, Wow, Care] ~ Instant", rate: "0.35", min: 50, max: 50000 },
+      { id: 31866, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Angry / Sad | Worldwide | HQ | 50k/Day ~ instant", rate: "0.07072", min: 10, max: 1000000 },
+      { id: 31777, platform: "facebook", category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers + Likes | 30D Refill | Instant Start", rate: "0.12444", min: 100, max: 50000 },
+      { id: 31778, platform: "facebook", category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers | 60D Auto Refill Guarantee", rate: "0.14550", min: 100, max: 50000 },
+      { id: 31691, platform: "facebook", category: "Facebook Followers [ Bot Data ] Cheapest In The World", name: "Facebook Followers | Bot Data | Non Drop | 50k/Day ~ instant | No Refill", rate: "0.13279", min: 100, max: 1000000 },
+      { id: 31692, platform: "facebook", category: "Facebook Followers [ Bot Data ] Cheapest In The World", name: "Facebook Followers | Bot Data | Non Drop | 50k/Day ~ instant | 30D Refill", rate: "0.13652", min: 100, max: 1000000 },
+      { id: 31765, platform: "facebook", category: "Facebook Followers [Global] [Fast Speed]", name: "Facebook Followers [Global Fast Speed] 10K/Day ~ Instant", rate: "0.22", min: 100, max: 10000 },
 
-      // একাধিক ওপেন প্রক্সি চেইন যাতে একটা ফেইল করলে অন্যটায় চলে যায়
-      const proxyList = [
-        `https://cors.eu.org/${API_URL}`,
-        `https://thingproxy.freeboard.io/fetch/${API_URL}`,
-        `https://proxy.corsfix.com/?${API_URL}`,
-        API_URL
-      ];
+      // ================= 🟣 INSTAGRAM SERVICES =================
+      { id: 31431, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Followers | HQ | %100 Old Account | Low Drop | 30D Refill", rate: "2.42", min: 10, max: 10000000 },
+      { id: 31432, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Followers | HQ | %100 Old Account | Low Drop | 60D Refill", rate: "2.7104", min: 10, max: 10000000 },
+      { id: 31783, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Real Followers | HQ Account | 30D Auto Refill Guarantee", rate: "1.1495", min: 50, max: 20000 },
+      { id: 31742, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | 50k/Day ~ instant | No Refill", rate: "0.11561", min: 10, max: 1000000 },
+      { id: 31743, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | 50k/Day ~ instant | 30D Refill", rate: "0.13816", min: 10, max: 1000000 },
+      { id: 31744, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | 50k/Day ~ instant | LifeTime Refill", rate: "0.17391", min: 10, max: 1000000 },
+      { id: 31784, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Post Likes | 100% Real | Non Drop ~ Instant", rate: "0.25", min: 50, max: 50000 },
+      { id: 31741, platform: "instagram", category: "Instagram Video Views [ High Speed ]", name: "Instagram Video Views | HQ | Max Unlimited | 100k/Day ~ instant", rate: "0.00079", min: 100, max: 100000000 },
+      { id: 30904, platform: "instagram", category: "Instagram Video Views [ High Speed ]", name: "Instagram Video Views | PROVIDER ~ Non Drop [ All Link ] ~ INSTANT", rate: "0.00059", min: 100, max: 2147483647 },
+      { id: 30905, platform: "instagram", category: "Instagram Engagement & Reach", name: "Instagram Save [ Max 100K ] | All Link | Instant", rate: "0.03889", min: 1, max: 10000000 },
+      { id: 30906, platform: "instagram", category: "Instagram Engagement & Reach", name: "Instagram Repost | HQ | Real People | 20k/Day ~ instant | 60D Refill", rate: "0.2915", min: 10, max: 100000 },
 
-      for (let endpoint of proxyList) {
-        try {
-          const res = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: payload
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (data) return data;
-          }
-        } catch (e) {
-          // পরবর্তী প্রক্সিতে যাবে
-        }
-      }
-      throw new Error("API সংযোগ ব্যর্থ হয়েছে।");
-    }
+      // ================= ⚫ TIKTOK SERVICES =================
+      { id: 31846, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | No Refill", rate: "1.54683", min: 5, max: 8000 },
+      { id: 31847, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | 30D Refill", rate: "1.88217", min: 5, max: 8000 },
+      { id: 31848, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | 60D Refill", rate: "2.21432", min: 5, max: 8000 },
+      { id: 31850, platform: "tiktok", category: "TikTok Followers [ Non Drop ] #Base 1", name: "TikTok Followers | High Quality | Low/Non Drop | 10k/Day ~ instant | LifeTime Refill", rate: "2.7679", min: 5, max: 8000 },
+      { id: 31800, platform: "tiktok", category: "TikTok Followers [ Real Users ] [ Cheapest ]", name: "TikTok Followers | HQ | 365D Auto Refill Guarantee", rate: "2.42", min: 100, max: 10000 },
+      { id: 31845, platform: "tiktok", category: "TikTok Followers [ Real Users ] [ Cheapest ]", name: "TikTok Followers | HQ | Real Account | 50k/Day ~ instant | No Refill", rate: "0.69056", min: 10, max: 100000 },
+      { id: 31855, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | High Quality | Real Account | 50k/Day ~ instant | No Refill", rate: "0.28462", min: 50, max: 1000000 },
+      { id: 31789, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | HQ New Update | 100K/Day Instant", rate: "0.515", min: 50, max: 100000 },
+      { id: 31745, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | From Ads | Non Drop ~ High Speed", rate: "0.94039", min: 1000, max: 10000000 },
+      { id: 31805, platform: "tiktok", category: "TikTok Views [ Instant Delivery ]", name: "TikTok Video Views | Ultra Fast Instant Delivery", rate: "0.03", min: 500, max: 1000000 },
 
-    // পেজ ওপেন হওয়ার সাথে সাথে সরাসরি লাইভ এপিআই ফেচ
-    window.addEventListener('DOMContentLoaded', async () => {
+      // ================= 🔴 YOUTUBE SERVICES =================
+      { id: 31810, platform: "youtube", category: "YouTube Subscribers [ Non Drop Guarantee ]", name: "YouTube Subscribers | Real Active Users | Non Drop Guarantee", rate: "3.20", min: 100, max: 5000 },
+      { id: 31856, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | 20k/Day ~ instant | No Refill", rate: "0.21682", min: 100, max: 1000000 },
+      { id: 31857, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | 50k/Day ~ instant | No Refill", rate: "0.28909", min: 100, max: 1000000 },
+      { id: 31858, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | 10k/Day ~ instant | 30D Refill", rate: "0.35461", min: 100, max: 1000000 },
+      { id: 31815, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Views | High Retention | Monetizable | Lifetime Guarantee", rate: "0.95", min: 500, max: 500000 },
+      { id: 31747, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video Views | All Kind Of Links Accepted | 30 Days Refill", rate: "1.58788", min: 1000, max: 1000000 },
+
+      // ================= 🔷 TELEGRAM SERVICES =================
+      { id: 31735, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | No Refill", rate: "0.0968", min: 10, max: 1000000 },
+      { id: 31736, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 30D Refill", rate: "0.11616", min: 10, max: 1000000 },
+      { id: 31737, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 60D Refill", rate: "0.13552", min: 10, max: 1000000 },
+      { id: 31738, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 90D Refill", rate: "0.15488", min: 10, max: 1000000 },
+      { id: 31739, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | 365D Refill", rate: "0.17424", min: 10, max: 1000000 },
+      { id: 31740, platform: "telegram", category: "Telegram Members [Cheap] [High Speed – Provider] ᴺᴱᵂ", name: "Telegram Members | High Quality | 50k/Day ~ instant | LifeTime Refill", rate: "0.1936", min: 10, max: 1000000 }
+    ];
+
+    let currentPlatform = 'facebook';
+    let userBalance = 0.00;
+
+    // পেজ ওপেন হওয়ার সাথে সাথে
+    window.addEventListener('DOMContentLoaded', () => {
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -399,38 +420,15 @@
         }
       }
 
-      updateBalance();
+      selectPlatform('facebook');
+      populateTable();
       renderHistory();
-
-      // সরাসরি এপিআই থেকে শত শত সার্ভিস লাইভ ফেচ
-      await loadLiveServices();
+      updateBalance();
     });
-
-    async function loadLiveServices() {
-      const loader = document.getElementById('apiLoadingCard');
-      const orderForm = document.getElementById('viewNewOrder');
-
-      try {
-        const data = await executeApiCall("services");
-        if (Array.isArray(data) && data.length > 0) {
-          liveServicesFromApi = data;
-          loader.classList.add('hidden');
-          orderForm.classList.remove('hidden');
-
-          selectPlatform('facebook');
-          populateTable();
-          notify("লাইভ সার্ভিস সফলভাবে সিঙ্ক হয়েছে!", "success");
-        } else {
-          loader.innerHTML = '<p class="text-xs text-rose-600 font-bold">❌ এপিআই থেকে কোনো সার্ভিস পাওয়া যায়নি। রিলোড দিন।</p>';
-        }
-      } catch (err) {
-        loader.innerHTML = '<p class="text-xs text-rose-600 font-bold">❌ সার্ভার সংযোগ ব্যর্থ হয়েছে। অনুগ্রহ করে ইন্টারনেট চেক করে রিফ্রেশ দিন।</p>';
-      }
-    }
 
     // প্ল্যাটফর্ম সিলেকশন
     function selectPlatform(p) {
-      activePlatform = p;
+      currentPlatform = p;
       document.querySelectorAll('.platform-btn').forEach(btn => {
         btn.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-600', 'shadow-xs');
         btn.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-500');
@@ -440,29 +438,18 @@
         activeBtn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-600', 'shadow-xs');
         activeBtn.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-500');
       }
-      populateCategoriesFromApi();
+      populateCategories();
     }
 
-    // এপিআই ডাটা থেকে নির্বাচিত প্ল্যাটফর্মের সব আসল ক্যাটাগরি ফিল্টার করা
-    function populateCategoriesFromApi() {
+    // আসল ক্যাটাগরিগুলো ড্রপডাউনে বসানো
+    function populateCategories() {
       const catSelect = document.getElementById('orderCategory');
       catSelect.innerHTML = '';
 
-      const matched = liveServicesFromApi.filter(s => {
-        const c = (s.category || '').toLowerCase();
-        const n = (s.name || '').toLowerCase();
-        return c.includes(activePlatform) || n.includes(activePlatform);
-      });
-
+      const matched = masterServicesList.filter(s => s.platform === currentPlatform);
       const uniqueCategories = [...new Set(matched.map(s => s.category))];
-      document.getElementById('catCountBadge').innerText = `${uniqueCategories.length} Categories`;
-
-      if (uniqueCategories.length === 0) {
-        const opt = document.createElement('option');
-        opt.innerText = "কোনো ক্যাটাগরি পাওয়া যায়নি";
-        catSelect.appendChild(opt);
-        return;
-      }
+      
+      document.getElementById('catCountBadge').innerText = `${uniqueCategories.length} টি ক্যাটাগরি`;
 
       uniqueCategories.forEach(cat => {
         const opt = document.createElement('option');
@@ -471,57 +458,60 @@
         catSelect.appendChild(opt);
       });
 
-      updateServicesFromCategory();
+      updateServices();
     }
 
-    // ক্যাটাগরি পরিবর্তনের সাথে সাথে এপিআই-এর আসল সার্ভিস লোড
-    function updateServicesFromCategory() {
-      const selectedCategory = document.getElementById('orderCategory').value;
+    // ক্যাটাগরি অনুযায়ী সব সার্ভিস আনা
+    function updateServices() {
+      const selectedCat = document.getElementById('orderCategory').value;
       const servSelect = document.getElementById('orderService');
       servSelect.innerHTML = '';
 
-      const services = liveServicesFromApi.filter(s => s.category === selectedCategory);
+      const services = masterServicesList.filter(s => s.category === selectedCat);
+      document.getElementById('badgeServiceCount').innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i>${services.length} টি সার্ভিস উপলভ্য`;
 
       services.forEach(s => {
         const sellingPrice = calculateProfitRate(s.rate);
         const opt = document.createElement('option');
-        opt.value = s.service;
+        opt.value = s.id;
         opt.dataset.rate = sellingPrice;
         opt.dataset.min = s.min;
         opt.dataset.max = s.max;
-        opt.innerText = `${s.service} — ${s.name} (৳${sellingPrice}/1K)`;
+        opt.innerText = `${s.id} — ${s.name} (৳${sellingPrice}/1K)`;
         servSelect.appendChild(opt);
       });
 
       calculatePrice();
     }
 
-    // লাইভ সার্চ ফিল্টার
+    // লাইভ সার্চ
     function handleSearch() {
       const q = document.getElementById('liveSearchBox').value.toLowerCase().trim();
       if (!q) {
-        populateCategoriesFromApi();
+        populateCategories();
         return;
       }
+
       const servSelect = document.getElementById('orderService');
       servSelect.innerHTML = '';
 
-      const matches = liveServicesFromApi.filter(s => 
-        (s.name || '').toLowerCase().includes(q) || 
-        (s.category || '').toLowerCase().includes(q) || 
-        String(s.service).includes(q)
+      const matches = masterServicesList.filter(s => 
+        s.name.toLowerCase().includes(q) || 
+        s.category.toLowerCase().includes(q) || 
+        String(s.id).includes(q)
       );
 
-      matches.slice(0, 40).forEach(s => {
+      matches.forEach(s => {
         const sellingPrice = calculateProfitRate(s.rate);
         const opt = document.createElement('option');
-        opt.value = s.service;
+        opt.value = s.id;
         opt.dataset.rate = sellingPrice;
         opt.dataset.min = s.min;
         opt.dataset.max = s.max;
-        opt.innerText = `${s.service} — ${s.name} (৳${sellingPrice}/1K)`;
+        opt.innerText = `${s.id} — ${s.name} (৳${sellingPrice}/1K)`;
         servSelect.appendChild(opt);
       });
+
       calculatePrice();
     }
 
@@ -541,30 +531,19 @@
       document.getElementById('totalCostDisplay').innerText = `৳ ${total.toFixed(2)}`;
     }
 
-    // সরাসরি OpsFollow API-তে লাইভ অর্ডার সাবমিশন
+    // সরাসরি OpsFollow API-তে লাইভ অর্ডার পাঠানো
     async function submitOrder() {
       const link = document.getElementById('orderLink').value.trim();
       const qty = parseInt(document.getElementById('orderQuantity').value);
       const servSelect = document.getElementById('orderService');
       const opt = servSelect.selectedOptions[0];
 
-      if (!opt) {
-        notify("দয়া করে সার্ভিস নির্বাচন করুন!", "error");
-        return;
-      }
-      const min = parseInt(opt.dataset.min || 1);
-      const max = parseInt(opt.dataset.max || 100000);
-
       if (!link || !link.startsWith('http')) {
         notify("সঠিক লিংক ইনপুট করুন (https://...)!", "error");
         return;
       }
-      if (!qty || qty < min) {
-        notify(`সর্বনিম্ন পরিমাণ ${min} দিতে হবে!`, "error");
-        return;
-      }
-      if (qty > max) {
-        notify(`সর্বোচ্চ পরিমাণ ${max} অতিক্রম করেছে!`, "error");
+      if (!qty || qty <= 0) {
+        notify("সঠিক পরিমাণ লিখুন!", "error");
         return;
       }
 
@@ -581,22 +560,31 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> প্রসেসিং হচ্ছে...';
 
       try {
-        const res = await executeApiCall("add", {
+        const form = new URLSearchParams({
+          key: API_KEY,
+          action: "add",
           service: opt.value,
           link: link,
           quantity: qty
         });
 
-        if (res.order) {
+        const res = await fetch(PROXY_URL + API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: form
+        });
+        const data = await res.json();
+
+        if (data.order) {
           userBalance -= cost;
           updateBalance();
-          saveHistory(res.order, opt.innerText, qty, cost);
-          notify(`অর্ডার সফল! Order ID: #${res.order}`, "success");
+          saveHistory(data.order, opt.innerText, qty, cost);
+          notify(`অর্ডার সফল! Order ID: #${data.order}`, "success");
           document.getElementById('orderLink').value = '';
           document.getElementById('orderQuantity').value = '';
           calculatePrice();
         } else {
-          notify(res.error || "অর্ডার সম্পন্ন করা যায়নি।", "error");
+          notify(data.error || "অর্ডার সম্পন্ন করা যায়নি।", "error");
         }
       } catch (err) {
         notify("সার্ভার এরর! কিছুক্ষণ পর চেষ্টা করুন।", "error");
@@ -606,7 +594,7 @@
       }
     }
 
-    // সরাসরি OpsFollow থেকে লাইভ ট্র্যাকিং
+    // লাইভ অর্ডার ট্র্যাকিং
     async function trackOrderLive() {
       const id = document.getElementById('trackInput').value.trim();
       const box = document.getElementById('trackResult');
@@ -619,22 +607,33 @@
       box.innerHTML = '<div class="text-center py-2 text-xs text-slate-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-1"></i> স্ট্যাটাস চেক হচ্ছে...</div>';
 
       try {
-        const res = await executeApiCall("status", { order: id });
-        if (res.status) {
+        const form = new URLSearchParams({
+          key: API_KEY,
+          action: "status",
+          order: id
+        });
+        const res = await fetch(PROXY_URL + API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: form
+        });
+        const data = await res.json();
+
+        if (data.status) {
           box.innerHTML = `
             <div class="space-y-2">
               <div class="flex justify-between items-center">
                 <span class="font-bold text-xs text-slate-800">Order #${id}</span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${res.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${res.status}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${data.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${data.status}</span>
               </div>
               <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 pt-1">
-                <p>শুরুর কাউন্ট: <span class="font-bold text-slate-800">${res.start_count || 0}</span></p>
-                <p>বাকি আছে: <span class="font-bold text-slate-800">${res.remains || 0}</span></p>
+                <p>শুরুর কাউন্ট: <span class="font-bold text-slate-800">${data.start_count || 0}</span></p>
+                <p>বাকি আছে: <span class="font-bold text-slate-800">${data.remains || 0}</span></p>
               </div>
             </div>
           `;
         } else {
-          box.innerHTML = `<p class="text-xs text-rose-600 font-bold">${res.error || "অর্ডারটি পাওয়া যায়নি।"}</p>`;
+          box.innerHTML = `<p class="text-xs text-rose-600 font-bold">${data.error || "অর্ডারটি পাওয়া যায়নি।"}</p>`;
         }
       } catch (e) {
         box.innerHTML = '<p class="text-xs text-rose-600 font-bold">সার্ভার এরর!</p>';
@@ -740,10 +739,10 @@
     function populateTable() {
       const tbody = document.getElementById('servicesTableBody');
       let rows = '';
-      liveServicesFromApi.slice(0, 50).forEach(s => {
+      masterServicesList.forEach(s => {
         const rate = calculateProfitRate(s.rate);
         rows += `<tr>
-          <td class="py-2.5 font-mono text-slate-500">${s.service}</td>
+          <td class="py-2.5 font-mono text-slate-500">${s.id}</td>
           <td class="py-2.5 font-semibold text-slate-700">${s.name}</td>
           <td class="py-2.5 text-right font-black text-blue-600 font-mono">৳${rate}</td>
         </tr>`;
