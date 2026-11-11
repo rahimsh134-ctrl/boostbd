@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Boost BD — NextGen Social Cloud</title>
+  <title>BOOST BD — Enterprise Cloud SMM</title>
 
   <!-- Google Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -17,14 +17,21 @@
 
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
       -webkit-tap-highlight-color: transparent;
+      background-color: #090D16;
+      color: #F1F5F9;
     }
     .custom-scrollbar::-webkit-scrollbar { display: none; }
     .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
     .toast-anim {
-      animation: dropDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: dropDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     @keyframes dropDown {
       from { transform: translateY(-100%); opacity: 0; }
@@ -32,179 +39,178 @@
     }
   </style>
 </head>
-<body class="bg-[#F8FAFC] text-slate-800 min-h-screen pb-24 select-none custom-scrollbar">
+<body class="min-h-screen pb-24 select-none custom-scrollbar">
 
-  <!-- ================= TOAST NOTIFICATION ================= -->
+  <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toastContainer" class="fixed top-4 left-4 right-4 z-50 pointer-events-none flex flex-col items-center space-y-2"></div>
 
-  <!-- ================= TOP APP BAR ================= -->
-  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 flex items-center justify-between shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-30 bg-[#090D16]/90 backdrop-blur-xl border-b border-slate-800 px-4 py-3.5 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-700 active:scale-95 transition shadow-xs">
+      <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-200 active:scale-95 transition shadow-sm">
         <i class="fa-solid fa-bars-staggered text-sm"></i>
       </button>
       <div>
         <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <h1 class="font-black text-base tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            BOOST BD<span class="text-[10px] text-blue-500 font-extrabold align-super">™</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <h1 class="font-extrabold text-base tracking-tight bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            BOOST BD <span class="text-[9px] text-blue-400 font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">PRO</span>
           </h1>
         </div>
-        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Enterprise Cloud v2.0</p>
       </div>
     </div>
 
     <!-- Live Balance Pill -->
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/60 px-3.5 py-1.5 rounded-full flex items-center space-x-2 shadow-xs">
-      <i class="fa-solid fa-wallet text-blue-600 text-xs"></i>
-      <span class="text-xs font-black text-blue-700 font-mono tracking-tight" id="userBalanceDisplay">৳ 0.00</span>
+    <div class="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/30 px-3.5 py-1.5 rounded-full flex items-center space-x-2 shadow-inner">
+      <i class="fa-solid fa-wallet text-blue-400 text-xs"></i>
+      <span class="text-xs font-black text-blue-300 font-mono tracking-tight" id="userBalanceDisplay">৳ 0.00</span>
     </div>
   </header>
 
-  <!-- ================= SIDEBAR DRAWER ================= -->
-  <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/30 z-40 hidden backdrop-blur-xs transition-opacity"></div>
+  <!-- SIDEBAR DRAWER -->
+  <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/70 z-40 hidden backdrop-blur-xs transition-opacity"></div>
   
-  <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-white z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl border-r border-slate-200">
-    <div class="p-5 bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white shadow-md">
+  <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-[#0B1120] z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl border-r border-slate-800">
+    <div class="p-5 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white shadow-lg">
       <div class="flex justify-between items-start mb-3">
-        <div class="w-12 h-12 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center text-xl font-bold backdrop-blur-md">
-          <i class="fa-solid fa-user-shield"></i>
+        <div class="w-12 h-12 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center text-xl font-bold backdrop-blur-md">
+          <i class="fa-solid fa-user-astronaut"></i>
         </div>
         <button onclick="toggleSidebar()" class="text-white/80 hover:text-white p-1">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
       <h2 class="font-bold text-sm tracking-tight truncate" id="userNameDisplay">Member Account</h2>
-      <p class="text-[11px] text-blue-100 font-mono" id="userIdDisplay">UID: Connected</p>
+      <p class="text-[11px] text-blue-200 font-mono" id="userIdDisplay">UID: Connecting...</p>
       
-      <div class="mt-3 bg-white/15 border border-white/20 rounded-xl p-2.5 flex justify-between items-center text-xs backdrop-blur-xs">
-        <span class="text-blue-100 font-medium">উপলব্ধ ব্যালেন্স:</span>
-        <span class="font-black text-amber-300 text-sm font-mono" id="sidebarBalance">৳ 0.00 BDT</span>
+      <div class="mt-3 bg-black/20 border border-white/10 rounded-xl p-2.5 flex justify-between items-center text-xs backdrop-blur-xs">
+        <span class="text-slate-300 font-medium">মূল ব্যালেন্স:</span>
+        <span class="font-black text-amber-400 text-sm font-mono" id="sidebarBalance">৳ 0.00 BDT</span>
       </div>
     </div>
 
-    <nav class="flex-1 overflow-y-auto p-4 space-y-1.5 text-xs font-semibold text-slate-600">
-      <button onclick="switchTab('newOrder'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl bg-blue-50 text-blue-700 border border-blue-200/60 font-bold transition">
-        <i class="fa-solid fa-cart-shopping w-5 text-blue-600"></i>
-        <span>নতুন অর্ডার (Instant Order)</span>
+    <nav class="flex-1 overflow-y-auto p-4 space-y-1.5 text-xs font-semibold text-slate-300">
+      <button onclick="switchTab('newOrder'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl bg-blue-600/15 text-blue-400 border border-blue-500/30 font-bold transition">
+        <i class="fa-solid fa-cart-shopping w-5 text-blue-400"></i>
+        <span>নতুন অর্ডার (New Order)</span>
       </button>
 
-      <button onclick="switchTab('orders'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 transition">
-        <i class="fa-solid fa-clock-rotate-left w-5 text-slate-400"></i>
-        <span>অর্ডার ট্র্যাকিং (Live Status)</span>
+      <button onclick="switchTab('orders'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-800/60 transition text-slate-400 hover:text-white">
+        <i class="fa-solid fa-clock-rotate-left w-5"></i>
+        <span>অর্ডার ট্র্যাকিং (Tracking)</span>
       </button>
 
-      <button onclick="switchTab('addFunds'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 transition">
-        <i class="fa-solid fa-wallet w-5 text-emerald-500"></i>
-        <span>ব্যালেন্স রিচার্জ (Add Funds)</span>
+      <button onclick="switchTab('addFunds'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-800/60 transition text-slate-400 hover:text-white">
+        <i class="fa-solid fa-wallet w-5 text-emerald-400"></i>
+        <span>টাকা রিচার্জ (Add Funds)</span>
       </button>
 
-      <button onclick="switchTab('servicesList'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 transition">
-        <i class="fa-solid fa-table-list w-5 text-indigo-500"></i>
+      <button onclick="switchTab('servicesList'); toggleSidebar();" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-800/60 transition text-slate-400 hover:text-white">
+        <i class="fa-solid fa-table-list w-5 text-indigo-400"></i>
         <span>সার্ভিস চার্ট (Price List)</span>
       </button>
 
-      <div class="pt-4 border-t border-slate-100"></div>
+      <div class="pt-4 border-t border-slate-800"></div>
 
-      <a href="https://t.me/boostbdbot" target="_blank" class="flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 text-slate-500 transition">
-        <i class="fa-solid fa-headset w-5 text-amber-500"></i>
-        <span>24/7 VIP Helpdesk</span>
+      <a href="https://t.me/boostbdbot" target="_blank" class="flex items-center space-x-3 px-3.5 py-3 rounded-xl hover:bg-slate-800/60 text-slate-400 transition">
+        <i class="fa-solid fa-headset w-5 text-amber-400"></i>
+        <span>24/7 সাপোর্ট (Support)</span>
       </a>
     </nav>
   </aside>
 
-  <!-- ================= MAIN CONTENT ================= -->
+  <!-- MAIN CONTAINER -->
   <main class="max-w-md mx-auto p-4 space-y-4">
 
-    <!-- TAB 1: NEW ORDER SECTION -->
+    <!-- TAB 1: NEW ORDER -->
     <section id="viewNewOrder" class="space-y-4">
       
-      <!-- Platform Selector Grid (5 Platforms) -->
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-sm">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">সোশ্যাল প্ল্যাটফর্ম নির্বাচন করুন</label>
+      <!-- Platform Selector Grid -->
+      <div class="glass-card rounded-2xl p-3.5 shadow-xl">
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">সোশ্যাল প্ল্যাটফর্ম সিলেক্ট করুন</label>
         <div class="grid grid-cols-5 gap-1.5">
-          <button onclick="selectPlatform('facebook')" id="btn-facebook" class="platform-btn p-2.5 rounded-xl bg-blue-50 border border-blue-500 text-blue-600 flex flex-col items-center justify-center transition active:scale-95 shadow-xs">
+          <button onclick="selectPlatform('facebook')" id="btn-facebook" class="platform-btn p-2.5 rounded-xl bg-blue-600/20 border border-blue-500 text-blue-400 flex flex-col items-center justify-center transition active:scale-95 shadow-md">
             <i class="fa-brands fa-facebook text-lg mb-1"></i>
             <span class="text-[9px] font-bold">Facebook</span>
           </button>
-          <button onclick="selectPlatform('instagram')" id="btn-instagram" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-instagram text-lg mb-1 text-pink-500"></i>
+          <button onclick="selectPlatform('instagram')" id="btn-instagram" class="platform-btn p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-instagram text-lg mb-1 text-pink-400"></i>
             <span class="text-[9px] font-bold">Instagram</span>
           </button>
-          <button onclick="selectPlatform('tiktok')" id="btn-tiktok" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-tiktok text-lg mb-1 text-slate-900"></i>
+          <button onclick="selectPlatform('tiktok')" id="btn-tiktok" class="platform-btn p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-tiktok text-lg mb-1 text-slate-200"></i>
             <span class="text-[9px] font-bold">TikTok</span>
           </button>
-          <button onclick="selectPlatform('youtube')" id="btn-youtube" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-youtube text-lg mb-1 text-red-500"></i>
+          <button onclick="selectPlatform('youtube')" id="btn-youtube" class="platform-btn p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-youtube text-lg mb-1 text-red-400"></i>
             <span class="text-[9px] font-bold">YouTube</span>
           </button>
-          <button onclick="selectPlatform('telegram')" id="btn-telegram" class="platform-btn p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 flex flex-col items-center justify-center transition active:scale-95">
-            <i class="fa-brands fa-telegram text-lg mb-1 text-sky-500"></i>
+          <button onclick="selectPlatform('telegram')" id="btn-telegram" class="platform-btn p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 flex flex-col items-center justify-center transition active:scale-95">
+            <i class="fa-brands fa-telegram text-lg mb-1 text-sky-400"></i>
             <span class="text-[9px] font-bold">Telegram</span>
           </button>
         </div>
       </div>
 
-      <!-- Real-Time Search Box -->
+      <!-- Real-Time Search -->
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-xs text-slate-400"></i>
-        <input type="text" id="liveSearchBox" oninput="handleSearch()" placeholder="Search Services (নাম বা আইডি লিখে খুঁজুন)..." class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <input type="text" id="liveSearchBox" oninput="handleSearch()" placeholder="সার্ভিস খুঁজুন (নাম বা আইডি দিয়ে)..." class="w-full glass-card border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-200 shadow-inner focus:ring-2 focus:ring-blue-500 focus:outline-none">
       </div>
 
       <!-- Main Input Card -->
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3.5 shadow-sm">
+      <div class="glass-card rounded-2xl p-4 space-y-3.5 shadow-xl">
         
         <!-- Category Dropdown -->
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+          <label class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
             <span>Category (ক্যাটাগরি)</span>
-            <span class="text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase" id="catCountBadge">ক্যাটাগরি সমূহ</span>
+            <span class="text-[9px] bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold uppercase" id="catCountBadge">লোড হচ্ছে...</span>
           </label>
           <div class="relative">
-            <select id="orderCategory" onchange="updateServices()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
+            <select id="orderCategory" onchange="updateServices()" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
             <i class="fa-solid fa-chevron-down absolute right-3.5 top-4 text-xs text-slate-400 pointer-events-none"></i>
           </div>
         </div>
 
         <!-- Service Dropdown -->
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+          <label class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
             <span>Service (সার্ভিস)</span>
-            <span class="text-[9px] text-emerald-600 font-bold" id="badgeServiceCount"><i class="fa-solid fa-check-circle mr-1"></i>সার্ভিস তালিকা রেডি</span>
+            <span class="text-[9px] text-emerald-400 font-bold" id="badgeServiceCount"><i class="fa-solid fa-sync fa-spin mr-1"></i>লাইভ সিঙ্ক হচ্ছে</span>
           </label>
           <div class="relative">
-            <select id="orderService" onchange="calculatePrice()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
+            <select id="orderService" onchange="calculatePrice()" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"></select>
             <i class="fa-solid fa-chevron-down absolute right-3.5 top-4 text-xs text-slate-400 pointer-events-none"></i>
           </div>
         </div>
 
-        <!-- Target Link Box -->
+        <!-- Target Link -->
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5">Target Link (টার্গেট লিংক)</label>
-          <input type="url" id="orderLink" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">Target Link (টার্গেট লিংক)</label>
+          <input type="url" id="orderLink" placeholder="https://..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-3 text-xs text-slate-100 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
-        <!-- Quantity Input -->
+        <!-- Quantity -->
         <div>
           <div class="flex justify-between items-center mb-1.5">
-            <label class="text-xs font-bold text-slate-700">Quantity (পরিমাণ)</label>
-            <span class="text-[10px] text-blue-600 font-bold" id="minMaxHint">Min: 100 — Max: 10,000</span>
+            <label class="text-xs font-bold text-slate-300">Quantity (পরিমাণ)</label>
+            <span class="text-[10px] text-blue-400 font-bold" id="minMaxHint">Min: 100 — Max: 10,000</span>
           </div>
-          <input type="number" id="orderQuantity" oninput="calculatePrice()" placeholder="1000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs font-extrabold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="number" id="orderQuantity" oninput="calculatePrice()" placeholder="1000" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-3 text-xs font-extrabold text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
         <!-- Cost Calculation Summary -->
-        <div class="bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100 rounded-xl p-3.5 flex justify-between items-center shadow-xs">
+        <div class="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 border border-blue-500/30 rounded-xl p-3.5 flex justify-between items-center shadow-inner">
           <div>
-            <span class="text-[11px] font-semibold text-slate-500 block">মোট মূল্য (BDT):</span>
-            <span class="text-[10px] text-emerald-600 font-bold"><i class="fa-solid fa-bolt mr-1"></i>ইনস্ট্যান্ট ডেলিভারি</span>
+            <span class="text-[11px] font-semibold text-slate-400 block">সর্বমোট খরচ (BDT):</span>
+            <span class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-bolt mr-1"></i>অটো প্রফিট মার্জিন যুক্ত</span>
           </div>
-          <span class="text-xl font-black text-blue-700 font-mono" id="totalCostDisplay">৳ 0.00</span>
+          <span class="text-xl font-black text-amber-400 font-mono" id="totalCostDisplay">৳ 0.00</span>
         </div>
 
-        <!-- Confirm Button -->
-        <button onclick="submitOrder()" id="btnSubmitOrder" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98] flex items-center justify-center space-x-2 text-xs">
+        <!-- Submit Button -->
+        <button onclick="submitOrder()" id="btnSubmitOrder" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-600/30 transition active:scale-[0.98] flex items-center justify-center space-x-2 text-xs">
           <i class="fa-solid fa-paper-plane text-xs"></i>
           <span>অর্ডার কনফার্ম করুন</span>
         </button>
@@ -213,69 +219,69 @@
 
     <!-- TAB 2: ORDER TRACKING -->
     <section id="viewOrders" class="space-y-4 hidden">
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm space-y-3">
-        <h2 class="font-bold text-xs text-slate-800">🔍 লাইভ অর্ডার স্ট্যাটাস ট্র্যাকার</h2>
+      <div class="glass-card rounded-2xl p-4 shadow-xl space-y-3">
+        <h2 class="font-bold text-xs text-slate-200">🔍 লাইভ অর্ডার স্ট্যাটাস ট্র্যাকার</h2>
         
         <div class="flex gap-2">
-          <input type="text" id="trackInput" placeholder="Order ID দিন (যেমন: 31762)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <button onclick="trackOrderLive()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs">Search</button>
+          <input type="text" id="trackInput" placeholder="Order ID দিন (যেমন: 31762)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <button onclick="trackOrderLive()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-md">Search</button>
         </div>
 
-        <div id="trackResult" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 hidden"></div>
+        <div id="trackResult" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hidden"></div>
       </div>
 
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm space-y-3">
-        <h3 class="font-bold text-xs text-slate-600 uppercase tracking-wider">📜 আপনার সাম্প্রতিক অর্ডারসমূহ</h3>
-        <div id="recentOrdersList" class="space-y-2 text-xs text-slate-500"></div>
+      <div class="glass-card rounded-2xl p-4 shadow-xl space-y-3">
+        <h3 class="font-bold text-xs text-slate-400 uppercase tracking-wider">📜 আপনার সাম্প্রতিক অর্ডারসমূহ</h3>
+        <div id="recentOrdersList" class="space-y-2 text-xs text-slate-400"></div>
       </div>
     </section>
 
     <!-- TAB 3: ADD FUNDS -->
     <section id="viewAddFunds" class="space-y-4 hidden">
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm space-y-4">
+      <div class="glass-card rounded-2xl p-4 shadow-xl space-y-4">
         <div>
-          <h2 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
-            <i class="fa-solid fa-shield-check text-emerald-600"></i> ম্যানুয়াল ডিপোজিট (bKash / Nagad / Rocket)
+          <h2 class="font-bold text-xs text-slate-100 flex items-center gap-1.5">
+            <i class="fa-solid fa-shield-check text-emerald-400"></i> ম্যানুয়াল ডিপোজিট (bKash / Nagad / Rocket)
           </h2>
-          <p class="text-[11px] text-slate-500 mt-1">Send Money করে ট্রানজেকশন আইডি (TrxID) দিন।</p>
+          <p class="text-[11px] text-slate-400 mt-1">নিচের নম্বরে Send Money করে TrxID প্রদান করুন।</p>
         </div>
 
         <div class="space-y-2.5">
-          <div class="p-3 bg-pink-50/70 border border-pink-200 rounded-xl flex items-center justify-between">
+          <div class="p-3 bg-pink-950/30 border border-pink-500/30 rounded-xl flex items-center justify-between">
             <div>
-              <span class="block text-[10px] font-bold text-pink-600">বিকাশ পার্সোনাল:</span>
-              <span class="font-mono text-xs text-slate-800 font-extrabold">01791415008</span>
+              <span class="block text-[10px] font-bold text-pink-400">বিকাশ পার্সোনাল:</span>
+              <span class="font-mono text-xs text-white font-extrabold">01791415008</span>
             </div>
-            <button onclick="copyNumber('01791415008')" class="text-[10px] font-bold bg-pink-600 text-white px-3 py-1.5 rounded-lg active:scale-95 shadow-xs">Copy</button>
+            <button onclick="copyNumber('01791415008')" class="text-[10px] font-bold bg-pink-600 hover:bg-pink-500 text-white px-3 py-1.5 rounded-lg active:scale-95 shadow-md">Copy</button>
           </div>
 
-          <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex items-center justify-between">
+          <div class="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl flex items-center justify-between">
             <div>
-              <span class="block text-[10px] font-bold text-amber-600">নগদ পার্সোনাল:</span>
-              <span class="font-mono text-xs text-slate-800 font-extrabold">01791415008</span>
+              <span class="block text-[10px] font-bold text-amber-400">নগদ পার্সোনাল:</span>
+              <span class="font-mono text-xs text-white font-extrabold">01791415008</span>
             </div>
-            <button onclick="copyNumber('01791415008')" class="text-[10px] font-bold bg-amber-600 text-white px-3 py-1.5 rounded-lg active:scale-95 shadow-xs">Copy</button>
+            <button onclick="copyNumber('01791415008')" class="text-[10px] font-bold bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg active:scale-95 shadow-md">Copy</button>
           </div>
 
-          <div class="p-3 bg-purple-50/70 border border-purple-200 rounded-xl flex items-center justify-between">
+          <div class="p-3 bg-purple-950/30 border border-purple-500/30 rounded-xl flex items-center justify-between">
             <div>
-              <span class="block text-[10px] font-bold text-purple-600">রকেট পার্সোনাল:</span>
-              <span class="font-mono text-xs text-slate-800 font-extrabold">01791415008</span>
+              <span class="block text-[10px] font-bold text-purple-400">রকেট পার্সোনাল:</span>
+              <span class="font-mono text-xs text-white font-extrabold">01791415008</span>
             </div>
-            <button onclick="copyNumber('01791415008')" class="text-[10px] font-bold bg-purple-600 text-white px-3 py-1.5 rounded-lg active:scale-95 shadow-xs">Copy</button>
+            <button onclick="copyNumber('01791415008')" class="text-[10px] font-bold bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg active:scale-95 shadow-md">Copy</button>
           </div>
         </div>
 
-        <div class="space-y-3 pt-1 border-t border-slate-100">
+        <div class="space-y-3 pt-1 border-t border-slate-800">
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">টাকার পরিমাণ (সর্বনিম্ন ৫০ টাকা)</label>
-            <input type="number" id="depositAmount" placeholder="100" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">টাকার পরিমাণ (সর্বনিম্ন ৫০ টাকা)</label>
+            <input type="number" id="depositAmount" placeholder="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">TrxID (ট্রানজেকশন আইডি)</label>
-            <input type="text" id="depositTrx" placeholder="যেমন: BKA9823412" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">TrxID (ট্রানজেকশন আইডি)</label>
+            <input type="text" id="depositTrx" placeholder="যেমন: BKA9823412" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
-          <button onclick="submitDeposit()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-md shadow-emerald-600/20 transition active:scale-95 text-xs">
+          <button onclick="submitDeposit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 transition active:scale-95 text-xs">
             🚀 ডিপোজিট রিকোয়েস্ট পাঠান
           </button>
         </div>
@@ -284,18 +290,18 @@
 
     <!-- TAB 4: SERVICES LIST -->
     <section id="viewServicesList" class="space-y-4 hidden">
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-        <h2 class="font-bold text-xs text-slate-800 mb-3">📋 সম্পূর্ণ সার্ভিস ও রেট তালিকা</h2>
+      <div class="glass-card rounded-2xl p-4 shadow-xl">
+        <h2 class="font-bold text-xs text-slate-200 mb-3">📋 সম্পূর্ণ লাইভ সার্ভিস ও রেট তালিকা</h2>
         <div class="overflow-x-auto max-h-96 custom-scrollbar">
           <table class="w-full text-left text-xs">
-            <thead class="sticky top-0 bg-white shadow-xs">
-              <tr class="border-b border-slate-100 text-slate-400">
+            <thead class="sticky top-0 bg-[#111827] shadow-md">
+              <tr class="border-b border-slate-800 text-slate-400">
                 <th class="pb-2">ID</th>
                 <th class="pb-2">সার্ভিস নাম</th>
                 <th class="pb-2 text-right">রেট (১K)</th>
               </tr>
             </thead>
-            <tbody id="servicesTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+            <tbody id="servicesTableBody" class="divide-y divide-slate-800/60 font-medium"></tbody>
           </table>
         </div>
       </div>
@@ -303,77 +309,46 @@
 
   </main>
 
-  <!-- ================= BOTTOM NAVIGATION TABS ================= -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 z-30 flex justify-around items-center shadow-lg">
-    <button onclick="switchTab('newOrder')" id="tabBtn-newOrder" class="flex flex-col items-center text-blue-600 font-bold text-[10px]">
+  <!-- BOTTOM NAVIGATION TABS -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-[#090D16]/95 backdrop-blur-xl border-t border-slate-800 px-4 py-2.5 z-30 flex justify-around items-center shadow-2xl">
+    <button onclick="switchTab('newOrder')" id="tabBtn-newOrder" class="flex flex-col items-center text-blue-400 font-bold text-[10px] transition">
       <i class="fa-solid fa-cart-shopping text-base mb-0.5"></i>
       <span>অর্ডার</span>
     </button>
-    <button onclick="switchTab('orders')" id="tabBtn-orders" class="flex flex-col items-center text-slate-400 font-medium text-[10px]">
+    <button onclick="switchTab('orders')" id="tabBtn-orders" class="flex flex-col items-center text-slate-500 font-medium text-[10px] transition">
       <i class="fa-solid fa-clock-rotate-left text-base mb-0.5"></i>
       <span>হিস্ট্রি</span>
     </button>
-    <button onclick="switchTab('addFunds')" id="tabBtn-addFunds" class="flex flex-col items-center text-slate-400 font-medium text-[10px]">
+    <button onclick="switchTab('addFunds')" id="tabBtn-addFunds" class="flex flex-col items-center text-slate-500 font-medium text-[10px] transition">
       <i class="fa-solid fa-wallet text-base mb-0.5"></i>
       <span>রিচার্জ</span>
     </button>
-    <button onclick="switchTab('servicesList')" id="tabBtn-servicesList" class="flex flex-col items-center text-slate-400 font-medium text-[10px]">
+    <button onclick="switchTab('servicesList')" id="tabBtn-servicesList" class="flex flex-col items-center text-slate-500 font-medium text-[10px] transition">
       <i class="fa-solid fa-table-list text-base mb-0.5"></i>
       <span>সার্ভিস</span>
     </button>
   </nav>
 
-  <!-- ================= JAVASCRIPT & PROFIT ENGINE ================= -->
+  <!-- JAVASCRIPT & LIVE API SYNC ENGINE -->
   <script>
     const API_KEY = "b65dcf632cd78d24828aa19c100ccefd";
     const API_URL = "https://opsfollow.com/api/v2";
     const PROXY_URL = "https://corsproxy.io/?";
     const USD_TO_BDT = 130;
 
-    // আপনার প্রফিট ফর্মুলা হিসাব
-    function calculateProfitRate(rawUsdRate) {
-      const rawBdt = parseFloat(rawUsdRate) * USD_TO_BDT;
-      let finalBdt = 0;
-
-      if (rawBdt < 80) {
-        finalBdt = rawBdt * 1.95; // ৯৫% লাভ
-      } else {
-        finalBdt = rawBdt * 1.50; // ৫০% লাভ
-      }
-      return Math.ceil(finalBdt);
-    }
-
-    // মাস্টার সার্ভিস ডেটাবেজ
-    const masterServicesList = [
-      { id: 31827, platform: "facebook", category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Followers [Bangladeshi Real Profiles] S1", rate: "0.85", min: 100, max: 10000 },
-      { id: 31828, platform: "facebook", category: "🇧🇩 Facebook - Bangladeshi Service", name: "Facebook Page Likes [Bangladeshi Targeted Users] S2", rate: "0.95", min: 100, max: 15000 },
-      { id: 31867, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Worldwide | Max 20k | 20k/Day ~ Instant", rate: "0.09352", min: 100, max: 20000 },
-      { id: 31776, platform: "facebook", category: "S2 - Facebook Followers [ Worldwide 🌍 ]", name: "Facebook Followers | Non Drop | HQ Page", rate: "0.12105", min: 100, max: 20000 },
-      { id: 31780, platform: "facebook", category: "Facebook Post Reactions [ Worldwide 🌍 ] NEW", name: "Facebook Post Reactions [Love, Haha, Wow, Care] ~ Instant", rate: "0.35", min: 50, max: 50000 },
-      { id: 31777, platform: "facebook", category: "Facebook Followers [HQ Page] [Non Drop ]", name: "Facebook Page Followers + Likes | 30D Refill | Instant", rate: "0.12444", min: 100, max: 50000 },
-      
-      { id: 31431, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Followers | HQ | %100 Old Account | Low Drop", rate: "2.42", min: 10, max: 10000000 },
-      { id: 31783, platform: "instagram", category: "Instagram Followers [ Real Account With Refill ]", name: "Instagram Real Followers | HQ Account | 30D Refill", rate: "1.1495", min: 50, max: 20000 },
-      { id: 31742, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Likes | HQ | Max 1M | Instant", rate: "0.11561", min: 10, max: 1000000 },
-      { id: 31784, platform: "instagram", category: "Instagram Likes [ Cheapest HQ ]", name: "Instagram Post Likes | 100% Real | Non Drop ~ Instant", rate: "0.25", min: 50, max: 50000 },
-
-      { id: 31846, platform: "tiktok", category: "TikTok Followers [ Non Drop ]", name: "TikTok Followers | High Quality | Low/Non Drop", rate: "1.54683", min: 5, max: 8000 },
-      { id: 31800, platform: "tiktok", category: "TikTok Followers [ Real Users ] [ Cheapest ]", name: "TikTok Followers | HQ | 365D Auto Refill Guarantee", rate: "2.42", min: 100, max: 10000 },
-      { id: 31855, platform: "tiktok", category: "TikTok Likes [ Newly Added ]", name: "TikTok Likes | High Quality | Real Account ~ Instant", rate: "0.28462", min: 50, max: 1000000 },
-      { id: 31805, platform: "tiktok", category: "TikTok Views [ Instant Delivery ]", name: "TikTok Video Views | Ultra Fast Instant Delivery", rate: "0.03", min: 500, max: 1000000 },
-
-      { id: 31810, platform: "youtube", category: "YouTube Subscribers [ Non Drop Guarantee ]", name: "YouTube Subscribers | Real Active Users | Non Drop", rate: "3.20", min: 100, max: 5000 },
-      { id: 31856, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Video & Shorts | HQ | Instant", rate: "0.21682", min: 100, max: 1000000 },
-      { id: 31815, platform: "youtube", category: "YouTube Video Views ᴺᴱᵂ", name: "YouTube Views | High Retention | Monetizable", rate: "0.95", min: 500, max: 500000 },
-
-      { id: 31735, platform: "telegram", category: "Telegram Members [Cheap] [High Speed]", name: "Telegram Members | High Quality | Instant", rate: "0.0968", min: 10, max: 1000000 },
-      { id: 31736, platform: "telegram", category: "Telegram Members [Cheap] [High Speed]", name: "Telegram Members | High Quality | 30D Refill", rate: "0.11616", min: 10, max: 1000000 }
-    ];
-
+    let masterServicesList = [];
     let currentPlatform = 'facebook';
     let userBalance = 0.00;
 
-    window.addEventListener('DOMContentLoaded', () => {
+    // প্রফিট মার্জিন ফর্মুলা
+    function calculateProfitRate(rawUsdRate) {
+      const rawBdt = parseFloat(rawUsdRate) * USD_TO_BDT;
+      let finalBdt = (rawBdt < 80) ? (rawBdt * 1.95) : (rawBdt * 1.50);
+      return Math.ceil(finalBdt);
+    }
+
+    // অ্যাপ লোড হওয়ার সাথে সাথে সরাসরি প্রোভাইডার থেকে সমস্ত সার্ভিস ফেচ করা
+    window.addEventListener('DOMContentLoaded', async () => {
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -385,22 +360,75 @@
         }
       }
 
-      selectPlatform('facebook');
-      populateTable();
-      renderHistory();
+      await fetchAllServicesFromApi();
       updateBalance();
+      renderHistory();
     });
+
+    // OpsFollow API থেকে লাইভ সমস্ত সার্ভিস নামিয়ে আনা
+    async function fetchAllServicesFromApi() {
+      try {
+        const form = new URLSearchParams({ key: API_KEY, action: "services" });
+        const res = await fetch(PROXY_URL + encodeURIComponent(API_URL), {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: form
+        });
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          masterServicesList = data.map(s => {
+            const nameLower = s.name.toLowerCase();
+            const catLower = (s.category || "").toLowerCase();
+            let plat = "facebook";
+
+            if (nameLower.includes("instagram") || catLower.includes("instagram")) plat = "instagram";
+            else if (nameLower.includes("tiktok") || catLower.includes("tiktok")) plat = "tiktok";
+            else if (nameLower.includes("youtube") || nameLower.includes("subscriber") || catLower.includes("youtube")) plat = "youtube";
+            else if (nameLower.includes("telegram") || catLower.includes("telegram")) plat = "telegram";
+
+            return {
+              id: s.service,
+              platform: plat,
+              category: s.category || "General Services",
+              name: s.name,
+              rate: s.rate,
+              min: s.min || 10,
+              max: s.max || 100000
+            };
+          });
+
+          selectPlatform('facebook');
+          populateTable();
+          document.getElementById('badgeServiceCount').innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i>${masterServicesList.length} টি লাইভ সার্ভিস সিঙ্ক হয়েছে`;
+        } else {
+          throw new Error("Invalid API Data");
+        }
+      } catch (err) {
+        // ফলব্যাক ব্যাকআপ ডেটা যদি API কানেক্ট করতে সমস্যা হয়
+        masterServicesList = [
+          { id: 31762, platform: "facebook", category: "Facebook Followers", name: "Facebook Followers | Non Drop", rate: "0.85", min: 100, max: 50000 },
+          { id: 31783, platform: "instagram", category: "Instagram Followers", name: "Instagram Real Followers", rate: "1.14", min: 50, max: 20000 },
+          { id: 31800, platform: "tiktok", category: "TikTok Followers", name: "TikTok Followers | HQ", rate: "1.54", min: 5, max: 8000 },
+          { id: 31810, platform: "youtube", category: "YouTube Subscribers", name: "YouTube Subscribers | Non Drop", rate: "3.20", min: 100, max: 5000 },
+          { id: 31735, platform: "telegram", category: "Telegram Members", name: "Telegram Members | High Quality", rate: "0.09", min: 10, max: 1000000 }
+        ];
+        selectPlatform('facebook');
+        populateTable();
+        notify("লাইভ API থেকে ডেটা নিতে সমস্যা হয়েছে, ব্যাকআপ সার্ভিস লোড করা হয়েছে।", "error");
+      }
+    }
 
     function selectPlatform(p) {
       currentPlatform = p;
       document.querySelectorAll('.platform-btn').forEach(btn => {
-        btn.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-600', 'shadow-xs');
-        btn.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-500');
+        btn.classList.remove('bg-blue-600/20', 'border-blue-500', 'text-blue-400', 'shadow-md');
+        btn.classList.add('bg-slate-900/60', 'border-slate-800', 'text-slate-400');
       });
       const activeBtn = document.getElementById('btn-' + p);
       if (activeBtn) {
-        activeBtn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-600', 'shadow-xs');
-        activeBtn.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-500');
+        activeBtn.classList.add('bg-blue-600/20', 'border-blue-500', 'text-blue-400', 'shadow-md');
+        activeBtn.classList.remove('bg-slate-900/60', 'border-slate-800', 'text-slate-400');
       }
       populateCategories();
     }
@@ -412,7 +440,7 @@
       const matched = masterServicesList.filter(s => s.platform === currentPlatform);
       const uniqueCategories = [...new Set(matched.map(s => s.category))];
       
-      document.getElementById('catCountBadge').innerText = `${uniqueCategories.length} টি ক্যাটাগরি`;
+      document.getElementById('catCountBadge').innerText = `${uniqueCategories.length} ক্যাটাগরি`;
 
       uniqueCategories.forEach(cat => {
         const opt = document.createElement('option');
@@ -430,7 +458,6 @@
       servSelect.innerHTML = '';
 
       const services = masterServicesList.filter(s => s.category === selectedCat);
-      document.getElementById('badgeServiceCount').innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i>${services.length} টি সার্ভিস`;
 
       services.forEach(s => {
         const sellingPrice = calculateProfitRate(s.rate);
@@ -562,14 +589,10 @@
       }
 
       box.classList.remove('hidden');
-      box.innerHTML = '<div class="text-center py-2 text-xs text-slate-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-1"></i> স্ট্যাটাস চেক হচ্ছে...</div>';
+      box.innerHTML = '<div class="text-center py-2 text-xs text-slate-400 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-1"></i> স্ট্যাটাস চেক হচ্ছে...</div>';
 
       try {
-        const form = new URLSearchParams({
-          key: API_KEY,
-          action: "status",
-          order: id
-        });
+        const form = new URLSearchParams({ key: API_KEY, action: "status", order: id });
         const res = await fetch(PROXY_URL + encodeURIComponent(API_URL), {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -581,20 +604,20 @@
           box.innerHTML = `
             <div class="space-y-2">
               <div class="flex justify-between items-center">
-                <span class="font-bold text-xs text-slate-800">Order #${id}</span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${data.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${data.status}</span>
+                <span class="font-bold text-xs text-white">Order #${id}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${data.status === 'Completed' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}">${data.status}</span>
               </div>
-              <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 pt-1">
-                <p>শুরুর কাউন্ট: <span class="font-bold text-slate-800">${data.start_count || 0}</span></p>
-                <p>বাকি আছে: <span class="font-bold text-slate-800">${data.remains || 0}</span></p>
+              <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-400 pt-1">
+                <p>শুরুর কাউন্ট: <span class="font-bold text-slate-200">${data.start_count || 0}</span></p>
+                <p>বাকি আছে: <span class="font-bold text-slate-200">${data.remains || 0}</span></p>
               </div>
             </div>
           `;
         } else {
-          box.innerHTML = `<p class="text-xs text-rose-600 font-bold">${data.error || "অর্ডারটি পাওয়া যায়নি।"}</p>`;
+          box.innerHTML = `<p class="text-xs text-rose-400 font-bold">${data.error || "অর্ডারটি পাওয়া যায়নি।"}</p>`;
         }
       } catch (e) {
-        box.innerHTML = '<p class="text-xs text-rose-600 font-bold">সার্ভার এরর!</p>';
+        box.innerHTML = '<p class="text-xs text-rose-400 font-bold">সার্ভার এরর!</p>';
       }
     }
 
@@ -605,7 +628,7 @@
       const box = document.getElementById('toastContainer');
       const toast = document.createElement('div');
       const colors = type === "error" ? "bg-rose-600 text-white" : (type === "success" ? "bg-emerald-600 text-white" : "bg-slate-900 text-white");
-      toast.className = `toast-anim px-4 py-2.5 rounded-xl text-xs font-bold shadow-xl flex items-center space-x-2 pointer-events-auto max-w-xs ${colors}`;
+      toast.className = `toast-anim px-4 py-2.5 rounded-xl text-xs font-bold shadow-2xl flex items-center space-x-2 pointer-events-auto max-w-xs ${colors}`;
       toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-xmark' : (type === 'success' ? 'fa-circle-check' : 'fa-bell')} text-sm"></i> <span>${text}</span>`;
       box.appendChild(toast);
       setTimeout(() => { toast.remove(); }, 3200);
@@ -627,18 +650,18 @@
       let orders = JSON.parse(localStorage.getItem('user_orders') || '[]');
       const container = document.getElementById('recentOrdersList');
       if (orders.length === 0) {
-        container.innerHTML = '<p class="text-center py-4 text-xs text-slate-400">এখনও কোনো অর্ডার রেকর্ড নেই।</p>';
+        container.innerHTML = '<p class="text-center py-4 text-xs text-slate-500">এখনও কোনো অর্ডার রেকর্ড নেই।</p>';
         return;
       }
       container.innerHTML = orders.map(o => `
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center">
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl flex justify-between items-center">
           <div>
-            <span class="font-bold text-slate-800 text-xs font-mono">#${o.id}</span>
-            <p class="text-[10px] text-slate-500 truncate max-w-[170px]">${o.name}</p>
+            <span class="font-bold text-slate-200 text-xs font-mono">#${o.id}</span>
+            <p class="text-[10px] text-slate-400 truncate max-w-[170px]">${o.name}</p>
           </div>
           <div class="text-right">
-            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700">${o.status}</span>
-            <p class="text-[11px] font-bold text-blue-600 mt-0.5 font-mono">৳${o.cost.toFixed(1)}</p>
+            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">${o.status}</span>
+            <p class="text-[11px] font-bold text-amber-400 mt-0.5 font-mono">৳${o.cost.toFixed(1)}</p>
           </div>
         </div>
       `).join('');
@@ -678,16 +701,16 @@
         document.getElementById('view' + capitalize(t)).classList.add('hidden');
         const btn = document.getElementById('tabBtn-' + t);
         if (btn) {
-          btn.classList.remove('text-blue-600', 'font-bold');
-          btn.classList.add('text-slate-400', 'font-medium');
+          btn.classList.remove('text-blue-400', 'font-bold');
+          btn.classList.add('text-slate-500', 'font-medium');
         }
       });
 
       document.getElementById('view' + capitalize(tabId)).classList.remove('hidden');
       const activeBtn = document.getElementById('tabBtn-' + tabId);
       if (activeBtn) {
-        activeBtn.classList.add('text-blue-600', 'font-bold');
-        activeBtn.classList.remove('text-slate-400', 'font-medium');
+        activeBtn.classList.add('text-blue-400', 'font-bold');
+        activeBtn.classList.remove('text-slate-500', 'font-medium');
       }
       if (tabId === 'orders') renderHistory();
     }
@@ -700,9 +723,9 @@
       masterServicesList.forEach(s => {
         const rate = calculateProfitRate(s.rate);
         rows += `<tr>
-          <td class="py-2.5 font-mono text-slate-500">${s.id}</td>
-          <td class="py-2.5 font-semibold text-slate-700">${s.name}</td>
-          <td class="py-2.5 text-right font-black text-blue-600 font-mono">৳${rate}</td>
+          <td class="py-2.5 font-mono text-slate-400">${s.id}</td>
+          <td class="py-2.5 font-semibold text-slate-300">${s.name}</td>
+          <td class="py-2.5 text-right font-black text-amber-400 font-mono">৳${rate}</td>
         </tr>`;
       });
       tbody.innerHTML = rows;
