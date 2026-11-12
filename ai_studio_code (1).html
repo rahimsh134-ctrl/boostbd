@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BOOST BD PRO</title>
+  <meta name="description" content="Ultra-fast premium SMM panel optimized for Telegram Mini Apps and mobile browsers with high-speed social media boosting, BDT profit calculator, bKash/Nagad/Rocket deposits, and instant tracking." />
+  <meta property="og:title" content="BOOST BD PRO" />
+  <meta property="og:description" content="Ultra-fast premium SMM panel optimized for Telegram Mini Apps and mobile browsers with high-speed social media boosting, BDT profit calculator, bKash/Nagad/Rocket deposits, and instant tracking." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#090D16" />
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bgDark: '#090D16',
+            cardDark: '#0e1424',
+            panelDark: '#12192c',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- FontAwesome 6 for authentic brand icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Hind Siliguri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #090D16;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .glass-card {
+      background: rgba(14, 20, 36, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.4);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.25);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#090D16] text-slate-100 flex flex-col selection:bg-cyan-500/20 selection:text-cyan-300">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
+
+  <!-- Top Navbar -->
+  <header class="sticky top-0 z-30 bg-[#090D16]/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <button id="btn-open-drawer" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white active:scale-95 transition-all">
+        <i class="fa-solid fa-bars text-sm"></i>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-cyan-500/20">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-sm tracking-tight text-white">BOOST <span class="text-cyan-400">BD</span> PRO</span>
+          <span class="block text-[10px] text-slate-400 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live 1 USD = 130 BDT
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Header Balance Chip -->
+    <div class="flex items-center gap-2">
+      <div class="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-2">
+        <i class="fa-solid fa-wallet text-emerald-400 text-xs"></i>
+        <span id="nav-user-balance" class="font-mono text-xs font-bold text-emerald-400 tabular-nums">৳ 0.00</span>
+      </div>
+      <button onclick="switchTab('deposit')" class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 flex items-center justify-center text-xs active:scale-95 transition-all" title="Deposit Funds">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Drawer (Side Menu) -->
+  <div id="side-drawer" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div id="drawer-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"></div>
+    <!-- Drawer Panel -->
+    <div class="relative w-full max-w-xs bg-[#090D16] border-r border-slate-800 h-full flex flex-col z-10 shadow-2xl p-4 overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-cyan-500 flex items-center justify-center text-slate-950 font-bold text-xs">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <span class="font-bold text-sm text-white">BOOST <span class="text-cyan-400">BD</span> PRO</span>
+        </div>
+        <button id="btn-close-drawer" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <!-- User Info Card -->
+      <div class="p-3.5 my-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 font-bold text-sm" id="drawer-avatar">
+            U
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5">
+              <span id="drawer-username" class="text-xs font-bold text-white truncate">Member</span>
+              <span id="drawer-tg-badge" class="hidden text-[9px] bg-sky-950 border border-sky-800 text-sky-400 px-1 py-0.2 rounded font-mono font-bold">TG</span>
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono truncate">UID: <span id="drawer-uid" class="text-cyan-400">Loading...</span></div>
+          </div>
+        </div>
+        <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider">Wallet Balance</div>
+            <div id="drawer-balance" class="text-base font-bold font-mono text-emerald-400">৳ 0.00</div>
+          </div>
+          <button onclick="switchTab('deposit'); closeDrawer();" class="text-xs font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-1 rounded-lg hover:bg-emerald-500/30">
+            + Deposit
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Navigation Links -->
+      <div class="space-y-1">
+        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 py-1">Main Menu</div>
+        <button onclick="switchTab('order'); closeDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition-colors">
+          <i class="fa-solid fa-bolt text-cyan-400 w-4"></i> New Order
+        </button>
+        <button onclick="switchTab('services'); closeDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition-colors">
+          <i class="fa-solid fa-list-check text-blue-400 w-4"></i> Price List
+        </button>
+        <button onclick="switchTab('deposit'); closeDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition-colors">
+          <i class="fa-solid fa-wallet text-emerald-400 w-4"></i> Add Funds (Deposit)
+        </button>
+        <button onclick="switchTab('history'); closeDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition-colors">
+          <i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Order History
+        </button>
+        <button onclick="switchTab('track'); closeDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold text-slate-300 hover:bg-slate-900 hover:text-white transition-colors">
+          <i class="fa-solid fa-magnifying-glass text-purple-400 w-4"></i> Track Order Status
+        </button>
+
+        <!-- STRICT ADMIN PANEL LINK (Visible ONLY for Telegram IDs 5949694536, 7204142020, 7483320205) -->
+        <div id="admin-menu-container" class="hidden pt-2">
+          <button onclick="switchTab('admin'); closeDrawer();" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-bold text-rose-300 bg-rose-950/30 border border-rose-900/50 hover:bg-rose-900/40 transition-colors">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-rose-400 w-4"></i> Admin Panel</span>
+            <span class="text-[9px] bg-rose-500/30 text-rose-200 px-1.5 py-0.2 rounded font-mono">STAFF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Info / Support -->
+      <div class="mt-auto pt-4 border-t border-slate-800 space-y-2">
+        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">24/7 Support</div>
+        <a href="https://t.me/boostbdpro_support" target="_blank" class="w-full py-2 px-3 rounded-xl bg-sky-950/40 border border-sky-800/40 text-sky-300 text-xs font-semibold flex items-center justify-between">
+          <span class="flex items-center gap-2"><i class="fa-brands fa-telegram text-sky-400"></i> Telegram Support</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+        <a href="https://wa.me/8801791415008" target="_blank" class="w-full py-2 px-3 rounded-xl bg-emerald-950/40 border border-emerald-800/40 text-emerald-300 text-xs font-semibold flex items-center justify-between">
+          <span class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp: 01791415008</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Content -->
+  <main class="flex-1 max-w-3xl w-full mx-auto px-3.5 sm:px-6 pt-3 pb-24">
+
+    <!-- TAB 1: NEW ORDER -->
+    <section id="tab-order" class="space-y-4">
+      <!-- Platform Selector Grid -->
+      <div class="glass-card rounded-3xl p-4">
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+          <span>Select Platform</span>
+          <span id="platform-service-count" class="text-[11px] font-mono text-cyan-400">Loading...</span>
+        </div>
+        <div class="grid grid-cols-4 sm:grid-cols-8 gap-2" id="platform-grid">
+          <!-- Dynamically populated buttons -->
+        </div>
+      </div>
+
+      <!-- Order Configuration Form -->
+      <form id="order-form" class="glass-card rounded-3xl p-4 sm:p-6 space-y-4">
+        
+        <!-- 1. Category Dropdown (Inline SMM-Panel style) -->
+        <div class="relative" id="category-dropdown-wrapper">
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+            1. Select Category
+          </label>
+          <button type="button" id="btn-category-trigger" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-800 rounded-2xl text-left flex items-center justify-between hover:border-slate-700 transition-all cursor-pointer">
+            <div class="flex items-center gap-2.5 min-w-0 pr-2">
+              <i class="fa-solid fa-layer-group text-cyan-400"></i>
+              <span id="selected-category-label" class="text-xs sm:text-sm font-semibold text-slate-100 truncate">Loading categories...</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-slate-400">
+              <span id="category-total-badge" class="text-[11px] font-mono text-slate-500">(0)</span>
+              <i id="category-chevron" class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+          </button>
+
+          <!-- Inline Category Menu -->
+          <div id="category-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-2 z-40 bg-[#0d1322] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Filter box only visible if >10 items -->
+            <div id="category-filter-box" class="hidden p-2 border-b border-slate-800 bg-slate-950/60">
+              <input type="text" id="category-filter-input" placeholder="Filter categories..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 font-sans" />
+            </div>
+            <div id="category-items-list" class="max-h-64 overflow-y-auto p-1.5 space-y-1 custom-scrollbar"></div>
+          </div>
+        </div>
+
+        <!-- 2. Service Dropdown (Inline SMM-Panel style) -->
+        <div class="relative" id="service-dropdown-wrapper">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              2. Select Service
+            </label>
+            <span id="service-rate-badge" class="text-xs font-mono font-bold text-cyan-400">Rate: ৳ 0 / 1K</span>
+          </div>
+
+          <button type="button" id="btn-service-trigger" class="w-full p-3.5 bg-slate-900/95 border border-slate-800 rounded-2xl text-left hover:border-slate-700 transition-all cursor-pointer">
+            <div id="selected-service-content" class="space-y-1.5">
+              <div class="flex items-center justify-between gap-2">
+                <span id="service-id-badge" class="font-mono text-xs font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/50 px-2 py-0.5 rounded-lg">#---</span>
+                <div class="flex items-center gap-1.5 text-slate-400 text-xs font-semibold">
+                  <span id="service-trigger-state">Change</span>
+                  <i id="service-chevron" class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+              </div>
+              <div id="service-title-label" class="text-xs sm:text-sm font-semibold text-slate-100 line-clamp-2 leading-snug">
+                Select a service...
+              </div>
+              <div id="service-limits-label" class="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                Min: 10 · Max: 10,000
+              </div>
+            </div>
+          </button>
+
+          <!-- Inline Service Menu -->
+          <div id="service-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-2 z-40 bg-[#0d1322] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Filter box only visible if >10 items -->
+            <div id="service-filter-box" class="hidden p-2 border-b border-slate-800 bg-slate-950/60">
+              <input type="text" id="service-filter-input" placeholder="Search service name or #ID..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 font-sans" />
+            </div>
+            <div id="service-items-list" class="max-h-72 overflow-y-auto p-1.5 space-y-1 custom-scrollbar"></div>
+          </div>
+        </div>
+
+        <!-- Service Specs Card -->
+        <div id="service-specs-card" class="rounded-2xl bg-slate-950/80 border border-slate-800/80 p-3 space-y-1 text-xs">
+          <div class="flex items-center justify-between text-slate-400 text-[11px]">
+            <span class="font-semibold text-slate-300">Service Specs & Guarantees:</span>
+            <span id="spec-refill-badge" class="text-[10px] text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 px-1.5 py-0.5 rounded font-mono">30D Refill</span>
+          </div>
+          <p id="service-description-text" class="text-slate-400 leading-relaxed text-[11px]">
+            ⚡ Speed: Instant • 💎 Quality: High Quality • 🛡️ Guarantee: 30D Refill. Profile must be Public.
+          </p>
+        </div>
+
+        <!-- 3. Target Link Input -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              3. Target Link / URL
+            </label>
+            <button type="button" id="btn-paste-link" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1">
+              <i class="fa-regular fa-paste"></i> Paste
+            </button>
+          </div>
+          <input type="url" id="input-target-link" required placeholder="https://t.me/channel_or_post" class="w-full px-3.5 py-3 bg-slate-900/90 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500/60 font-mono" />
+          <span class="text-[11px] text-slate-500 mt-1 block">
+            Make sure your profile/channel is strictly <strong class="text-slate-300">Public</strong>.
+          </span>
+        </div>
+
+        <!-- 4. Quantity Input -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              4. Quantity
+            </label>
+            <span id="quantity-limits-hint" class="text-[11px] text-slate-400 font-mono">Min: 100 — Max: 50,000</span>
+          </div>
+          <input type="number" id="input-quantity" required value="1000" min="10" max="1000000" class="w-full px-3.5 py-3 bg-slate-900/90 border border-slate-800 rounded-xl text-base font-bold text-cyan-400 font-mono focus:outline-none focus:border-cyan-500/60" />
+          
+          <!-- Preset buttons -->
+          <div class="flex flex-wrap gap-1.5 mt-2" id="quantity-preset-container">
+            <button type="button" onclick="setQuantityValue(100)" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-white font-mono">+100</button>
+            <button type="button" onclick="setQuantityValue(500)" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-white font-mono">+500</button>
+            <button type="button" onclick="setQuantityValue(1000)" class="text-xs px-2.5 py-1 rounded-lg border border-cyan-500/40 bg-cyan-950/40 text-cyan-300 font-mono font-bold">+1,000</button>
+            <button type="button" onclick="setQuantityValue(2500)" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-white font-mono">+2,500</button>
+            <button type="button" onclick="setQuantityValue(5000)" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-white font-mono">+5,000</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Cost Calculator Card -->
+        <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-cyan-500/25 p-4 space-y-3">
+          <div class="p-2.5 rounded-xl bg-cyan-950/40 border border-cyan-800/40 flex items-center justify-between text-xs">
+            <span class="text-cyan-300 font-semibold flex items-center gap-1.5">
+              <i class="fa-solid fa-calculator"></i> <span>Rate Formula: 1 USD = 130 BDT</span>
+            </span>
+            <span id="rate-formula-label" class="text-[11px] text-emerald-400 font-mono">Profit Margin Applied</span>
+          </div>
+
+          <div class="flex items-baseline justify-between pt-1">
+            <div>
+              <span class="text-xs text-slate-400 uppercase tracking-wider font-bold block">Total Order Cost</span>
+              <span id="cost-usd-equivalent" class="text-[11px] text-slate-500 font-mono">≈ $0.00 USD</span>
+            </div>
+            <div class="text-right">
+              <span id="calculated-cost-bdt" class="text-2xl font-black text-cyan-400 font-mono tracking-tight tabular-nums">৳ 0</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Your Current Balance:</span>
+            <span id="order-user-balance" class="font-mono font-bold text-slate-200">৳ 0.00</span>
+          </div>
+
+          <div id="insufficient-balance-alert" class="hidden p-2.5 rounded-xl bg-rose-950/40 border border-rose-800/40 flex items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 text-rose-300">
+              <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+              <span id="insufficient-balance-text">Insufficient balance!</span>
+            </div>
+            <button type="button" onclick="switchTab('deposit')" class="text-xs font-bold text-rose-200 bg-rose-600/30 hover:bg-rose-600/50 border border-rose-500/50 px-2.5 py-1 rounded-lg">
+              Deposit
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="btn-submit-order" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:via-blue-500 hover:to-indigo-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99] flex items-center justify-center gap-2 min-h-[48px]">
+          <i class="fa-solid fa-bolt"></i>
+          <span id="btn-submit-order-label">Place Live Order</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- TAB 2: PRICE LIST -->
+    <section id="tab-services" class="space-y-4 hidden">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-cyan-400"></i> Live Services Price List
+            </h2>
+            <p class="text-xs text-slate-400">Real-time SMM catalog with dynamic BDT selling rates</p>
+          </div>
+          <button onclick="refreshServicesLive(true)" class="self-start sm:self-auto px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 active:scale-95 transition-all">
+            <i class="fa-solid fa-rotate text-cyan-400"></i> Refresh Rates
+          </button>
+        </div>
+
+        <!-- Search & Filter bar -->
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+          <input type="text" id="services-table-search" placeholder="Search by service name, category, or ID (#101)..." class="w-full pl-9 pr-4 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/60" />
+        </div>
+
+        <!-- Table Container -->
+        <div class="border border-slate-800 rounded-2xl overflow-hidden bg-slate-950/60">
+          <div class="max-h-[65vh] overflow-y-auto custom-scrollbar">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="sticky top-0 bg-[#0d1322] border-b border-slate-800 text-slate-400 text-[11px] font-semibold tracking-wider">
+                <tr>
+                  <th class="p-3 w-16 font-mono">ID</th>
+                  <th class="p-3">Service Name & Category</th>
+                  <th class="p-3 text-right font-mono">Rate / 1K</th>
+                  <th class="p-3 text-center w-20">Action</th>
+                </tr>
+              </thead>
+              <tbody id="services-table-body" class="divide-y divide-slate-800/60 text-slate-300">
+                <!-- Dynamically rendered rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: DEPOSIT (ADD FUNDS) -->
+    <section id="tab-deposit" class="space-y-4 hidden">
+      <!-- Balance Card -->
+      <div class="glass-card rounded-3xl p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-500/30">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Active Wallet Balance</span>
+            <div id="deposit-balance-display" class="text-3xl font-black text-emerald-400 font-mono tracking-tight tabular-nums mt-0.5">৳ 0.00</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 text-xl">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+          <span>Minimum Deposit: <strong class="text-emerald-400 font-mono">৳ 10 BDT</strong></span>
+          <span>Conversion: <strong class="text-slate-200 font-mono">1 USD = 130 BDT</strong></span>
+        </div>
+      </div>
+
+      <!-- Payment Method Selection Grid -->
+      <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">1. Select Payment Method</label>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="payment-methods-grid">
+            <!-- bKash -->
+            <button type="button" onclick="selectPaymentMethod('bKash')" id="pm-bKash" class="pm-card p-3 rounded-2xl border text-center transition-all bg-rose-950/30 border-rose-500/50 text-white font-bold text-xs">
+              <div class="w-8 h-8 rounded-xl bg-pink-600/30 text-pink-400 border border-pink-500/40 flex items-center justify-center mx-auto mb-1.5 text-sm">
+                <i class="fa-solid fa-mobile-screen"></i>
+              </div>
+              <div>bKash</div>
+              <div class="text-[10px] text-slate-400 font-normal">Personal</div>
+            </button>
+
+            <!-- Nagad -->
+            <button type="button" onclick="selectPaymentMethod('Nagad')" id="pm-Nagad" class="pm-card p-3 rounded-2xl border text-center transition-all bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700 text-xs font-bold">
+              <div class="w-8 h-8 rounded-xl bg-amber-600/20 text-amber-400 border border-amber-500/40 flex items-center justify-center mx-auto mb-1.5 text-sm">
+                <i class="fa-solid fa-money-bill-wave"></i>
+              </div>
+              <div>Nagad</div>
+              <div class="text-[10px] text-slate-400 font-normal">Personal</div>
+            </button>
+
+            <!-- Rocket -->
+            <button type="button" onclick="selectPaymentMethod('Rocket')" id="pm-Rocket" class="pm-card p-3 rounded-2xl border text-center transition-all bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700 text-xs font-bold">
+              <div class="w-8 h-8 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/40 flex items-center justify-center mx-auto mb-1.5 text-sm">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div>Rocket</div>
+              <div class="text-[10px] text-slate-400 font-normal">Personal</div>
+            </button>
+
+            <!-- Binance -->
+            <button type="button" onclick="selectPaymentMethod('Binance')" id="pm-Binance" class="pm-card p-3 rounded-2xl border text-center transition-all bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700 text-xs font-bold">
+              <div class="w-8 h-8 rounded-xl bg-yellow-600/20 text-yellow-400 border border-yellow-500/40 flex items-center justify-center mx-auto mb-1.5 text-sm">
+                <i class="fa-solid fa-coins"></i>
+              </div>
+              <div>Binance</div>
+              <div class="text-[10px] text-slate-400 font-normal">Pay UID</div>
+            </button>
+
+            <!-- USDT -->
+            <button type="button" onclick="selectPaymentMethod('USDT')" id="pm-USDT" class="pm-card p-3 rounded-2xl border text-center transition-all bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700 text-xs font-bold col-span-2 sm:col-span-1">
+              <div class="w-8 h-8 rounded-xl bg-teal-600/20 text-teal-400 border border-teal-500/40 flex items-center justify-center mx-auto mb-1.5 text-sm">
+                <i class="fa-solid fa-circle-dollar-to-slot"></i>
+              </div>
+              <div>USDT (BEP20)</div>
+              <div class="text-[10px] text-slate-400 font-normal">Crypto</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Payment Details Box -->
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5" id="pm-details-box">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400" id="pm-label-target">Send Money to Personal Number:</span>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold">Min ৳ 10</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
+            <span id="pm-target-value" class="font-mono text-sm sm:text-base font-bold text-white select-all">01791415008</span>
+            <button type="button" onclick="copyPaymentTarget()" class="px-3 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center gap-1.5">
+              <i class="fa-regular fa-copy"></i> Copy
+            </button>
+          </div>
+
+          <p class="text-[11px] text-slate-400 leading-relaxed" id="pm-instruction-text">
+            Go to your bKash app → <strong>Send Money</strong> → Enter number above → Send amount (Min ৳10) → Copy Transaction ID (TrxID) and submit below.
+          </p>
+        </div>
+
+        <!-- Deposit Submission Form -->
+        <form id="deposit-form" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">2. Deposit Amount (BDT)</label>
+            <input type="number" id="deposit-amount-bdt" required min="10" value="50" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-base font-bold text-emerald-400 font-mono focus:outline-none focus:border-cyan-500/60" />
+            <div class="flex gap-1.5 mt-1.5">
+              <button type="button" onclick="document.getElementById('deposit-amount-bdt').value = 50" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-mono">৳50</button>
+              <button type="button" onclick="document.getElementById('deposit-amount-bdt').value = 100" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-mono">৳100</button>
+              <button type="button" onclick="document.getElementById('deposit-amount-bdt').value = 500" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-mono">৳500</button>
+              <button type="button" onclick="document.getElementById('deposit-amount-bdt').value = 1000" class="text-xs px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 font-mono">৳1,000</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">3. Transaction ID (TrxID) / Hash</label>
+            <input type="text" id="deposit-trxid" required placeholder="e.g. BL9A4K89QX" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm font-mono text-slate-100 placeholder-slate-600 uppercase focus:outline-none focus:border-cyan-500/60" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">4. Sender Phone / Account (Optional)</label>
+            <input type="text" id="deposit-sender-info" placeholder="01XXXXXXXXX or Binance UID" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500/60" />
+          </div>
+
+          <!-- Pending Notice -->
+          <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-2.5 text-xs">
+            <i class="fa-solid fa-clock text-amber-400 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-amber-300">Manual Admin Verification (1-10 mins)</div>
+              <div class="text-[11px] text-slate-300">Deposit requests are submitted to the queue as <strong class="text-amber-200">Pending</strong> and approved promptly by staff.</div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check"></i> Submit Deposit Request
+          </button>
+        </form>
+      </div>
+
+      <!-- Deposit History Table -->
+      <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-2">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Deposit Submissions</h3>
+        <div id="user-deposits-list" class="space-y-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ORDER HISTORY -->
+    <section id="tab-history" class="space-y-4 hidden">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Order History
+          </h2>
+          <span id="history-count-badge" class="text-xs font-mono text-slate-400">0 Orders</span>
+        </div>
+        <div id="order-history-list" class="space-y-2.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ORDER TRACKER -->
+    <section id="tab-track" class="space-y-4 hidden">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-4">
+        <div>
+          <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass text-purple-400"></i> Live Order Tracker
+          </h2>
+          <p class="text-xs text-slate-400">Query real-time delivery status, start count, and remains</p>
+        </div>
+
+        <form id="tracker-form" class="flex gap-2">
+          <input type="text" id="tracker-order-id" required placeholder="Enter Order ID (e.g. 104523)" class="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm font-mono text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500/60" />
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-all">
+            <i class="fa-solid fa-search"></i> Check Status
+          </button>
+        </form>
+
+        <div id="tracker-result-card" class="hidden p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+          <!-- Dynamic tracker details -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: STRICT ADMIN PANEL (LOCKED TO TELEGRAM IDs 5949694536, 7204142020, 7483320205) -->
+    <section id="tab-admin" class="space-y-4 hidden">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 border-rose-500/40 bg-gradient-to-br from-rose-950/20 via-slate-900 to-slate-950 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-rose-900/40">
+          <div>
+            <h2 class="text-base font-extrabold text-rose-300 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-rose-400"></i> Staff Admin Console
+            </h2>
+            <p class="text-xs text-rose-400/80">Authorized Staff: <span id="admin-active-uid" class="font-mono font-bold">---</span></p>
+          </div>
+          <button onclick="renderAdminDeposits()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-bold">
+            <i class="fa-solid fa-rotate"></i> Refresh Queue
+          </button>
+        </div>
+
+        <!-- Pending Deposits Queue -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Pending Deposits Verification</h3>
+            <span id="admin-pending-count" class="text-xs font-mono font-bold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded">0 Pending</span>
+          </div>
+          <div id="admin-deposits-queue" class="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Manual Balance Adjustment Tool -->
+        <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5">
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Manual Balance Credit / Debit</h3>
+          <form id="admin-manual-credit-form" class="space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="admin-credit-uid" required placeholder="User Telegram UID" class="px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500" />
+              <input type="number" id="admin-credit-amount" required placeholder="Amount (e.g. 500 or -200)" class="px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs font-mono text-emerald-400 placeholder-slate-600 focus:outline-none focus:border-cyan-500" />
+            </div>
+            <button type="submit" class="w-full py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-plus-minus"></i> Apply Balance Adjustment
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-[#090D16]/95 backdrop-blur-md border-t border-slate-800 px-2 py-1.5 flex items-center justify-around max-w-lg mx-auto sm:rounded-t-3xl sm:border-x">
+    <button onclick="switchTab('order')" id="nav-btn-order" class="bottom-nav-btn flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-cyan-400 transition-colors">
+      <i class="fa-solid fa-bolt text-base"></i>
+      <span class="text-[10px] font-bold">Order</span>
+    </button>
+    <button onclick="switchTab('services')" id="nav-btn-services" class="bottom-nav-btn flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+      <i class="fa-solid fa-list-check text-base"></i>
+      <span class="text-[10px] font-bold">Rates</span>
+    </button>
+    <button onclick="switchTab('deposit')" id="nav-btn-deposit" class="bottom-nav-btn flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+      <i class="fa-solid fa-wallet text-base"></i>
+      <span class="text-[10px] font-bold">Deposit</span>
+    </button>
+    <button onclick="switchTab('history')" id="nav-btn-history" class="bottom-nav-btn flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+      <i class="fa-solid fa-clock-rotate-left text-base"></i>
+      <span class="text-[10px] font-bold">History</span>
+    </button>
+    <button onclick="switchTab('track')" id="nav-btn-track" class="bottom-nav-btn flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+      <i class="fa-solid fa-magnifying-glass text-base"></i>
+      <span class="text-[10px] font-bold">Track</span>
+    </button>
+  </nav>
+
+  <!-- Complete Embedded JavaScript Application Logic -->
+  <script>
+    /* ==========================================================================
+       1. CONSTANTS, STORAGE KEYS & CONFIGURATION
+       ========================================================================== */
+    const PROVIDER_API_URL = 'https://opsfollow.com/api/v2';
+    const API_KEY = 'b65dcf632cd78d24828aa19c100ccefd';
+    const USD_TO_BDT_RATE = 130;
+
+    // STRICT TELEGRAM ADMIN LOCK: Only these 3 Telegram IDs can access Admin Panel
+    const AUTHORIZED_ADMIN_TELEGRAM_IDS = [5949694536, 7204142020, 7483320205];
+
+    const STORAGE_KEYS = {
+      BALANCE: 'boostbd_user_balance_v2',
+      ORDERS: 'boostbd_orders_v2',
+      DEPOSITS: 'boostbd_deposits_v2',
+      UID: 'boostbd_uid_v2',
+      SERVICES_CACHE: 'boostbd_services_cache_v4',
+      SERVICES_TIMESTAMP: 'boostbd_services_ts_v4',
+    };
+
+    const PLATFORM_CONFIG = [
+      { id: 'all', name: 'All', icon: 'fa-solid fa-globe', color: 'text-slate-300' },
+      { id: 'telegram', name: 'Telegram', icon: 'fa-brands fa-telegram', color: 'text-[#229ED9]' },
+      { id: 'whatsapp', name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', color: 'text-[#25D366]' },
+      { id: 'facebook', name: 'Facebook', icon: 'fa-brands fa-facebook', color: 'text-[#1877F2]' },
+      { id: 'instagram', name: 'Instagram', icon: 'fa-brands fa-instagram', color: 'text-[#E4405F]' },
+      { id: 'tiktok', name: 'TikTok', icon: 'fa-brands fa-tiktok', color: 'text-[#00F2FE]' },
+      { id: 'youtube', name: 'YouTube', icon: 'fa-brands fa-youtube', color: 'text-[#FF0000]' },
+      { id: 'twitter', name: 'Twitter/X', icon: 'fa-brands fa-x-twitter', color: 'text-white' },
+    ];
+
+    /* ==========================================================================
+       2. FALLBACK SERVICES CATALOG (Over 20+ realistic services)
+       ========================================================================== */
+    const FALLBACK_RAW_SERVICES = [
+      { service: '101', name: 'Telegram Channel Members [Global Non-Drop - 30D Refill - Fast]', category: 'Telegram Channel / Group Members', rate: '0.42', min: '100', max: '50000', refill: true, cancel: false },
+      { service: '102', name: 'Telegram Channel Members [Real Bangladeshi Active - Premium]', category: 'Telegram Channel / Group Members', rate: '1.20', min: '50', max: '10000', refill: true, cancel: false },
+      { service: '103', name: 'Telegram Post Views [Last 10 Posts - Instant - Auto Spread]', category: 'Telegram Post Views', rate: '0.08', min: '100', max: '100000', refill: false, cancel: false },
+      { service: '104', name: 'Telegram Channel Reactions [Positive Mix 👍❤️🔥 - Instant]', category: 'Telegram Reactions', rate: '0.15', min: '50', max: '20000', refill: false, cancel: false },
+      { service: '701', name: 'WhatsApp Channel Members [Real & Active Looking - High Retention]', category: 'WhatsApp Channel Members', rate: '1.65', min: '100', max: '20000', refill: true, cancel: false },
+      { service: '702', name: 'WhatsApp Channel Emoji Reactions [Positive Mix 👍❤️🔥 - Instant]', category: 'WhatsApp Channel Emoji Reactions', rate: '0.45', min: '50', max: '10000', refill: false, cancel: false },
+      { service: '703', name: 'WhatsApp Poll Votes [Targeted Option - Fast Delivery]', category: 'WhatsApp Poll Votes', rate: '0.85', min: '50', max: '5000', refill: false, cancel: false },
+      { service: '201', name: 'Facebook Page Likes + Followers [Bangladeshi Target - High Quality - Non-Drop]', category: 'Facebook Page Likes & Followers', rate: '1.85', min: '100', max: '50000', refill: true, cancel: false },
+      { service: '202', name: 'Facebook Profile Followers [Real Looking - 60 Days Refill - Instant]', category: 'Facebook Profile Followers', rate: '0.95', min: '100', max: '100000', refill: true, cancel: true },
+      { service: '203', name: 'Facebook Post Reactions [Love / Care / Wow Mix - Real BD Profiles]', category: 'Facebook Post Likes & Reactions', rate: '0.35', min: '50', max: '10000', refill: false, cancel: false },
+      { service: '301', name: 'Instagram Followers [High Quality Global - 365 Days Refill Button]', category: 'Instagram Followers [Refill]', rate: '0.78', min: '100', max: '100000', refill: true, cancel: true },
+      { service: '302', name: 'Instagram Followers [Bangladeshi / South Asian Profiles - Ultra HQ]', category: 'Instagram Followers [Targeted]', rate: '2.10', min: '100', max: '25000', refill: true, cancel: false },
+      { service: '303', name: 'Instagram Likes [Instant 50K/Day - Non-Drop - Real Profiles]', category: 'Instagram Likes', rate: '0.18', min: '50', max: '50000', refill: false, cancel: false },
+      { service: '401', name: 'TikTok Followers [Real & Active Looking - Non-Drop - Fast]', category: 'TikTok Followers', rate: '1.40', min: '100', max: '50000', refill: true, cancel: false },
+      { service: '402', name: 'TikTok Video Views [Ultra Fast 10M/Day - Instant Start]', category: 'TikTok Video Views', rate: '0.03', min: '500', max: '5000000', refill: false, cancel: false },
+      { service: '501', name: 'YouTube Subscribers [Non-Drop - Real Looking - Monetization Eligible]', category: 'YouTube Subscribers', rate: '5.50', min: '50', max: '10000', refill: true, cancel: false },
+      { service: '502', name: 'YouTube Video Views [Suggested Videos & Search - Real Human - Safe]', category: 'YouTube Video Views', rate: '1.10', min: '500', max: '500000', refill: true, cancel: false },
+      { service: '601', name: 'X (Twitter) Followers [NFT / Crypto / Global - High Quality]', category: 'Twitter / X Followers', rate: '1.90', min: '100', max: '50000', refill: true, cancel: false }
+    ];
+
+    /* ==========================================================================
+       3. PRICING & PROFIT MARGIN ENGINE
+       ========================================================================== */
+    function calculateSellingRateBdt(rawUsdRate) {
+      const rawBdtRate = Number(rawUsdRate) * USD_TO_BDT_RATE;
+      const isLowTier = rawBdtRate < 80;
+      const markupMultiplier = isLowTier ? 1.95 : 1.50;
+      const sellingRateBdt = Math.ceil(rawBdtRate * markupMultiplier);
+      return { rawBdtRate, markupMultiplier, isLowTier, sellingRateBdt };
+    }
+
+    function calculateOrderCostBdt(quantity, sellingRateBdt) {
+      if (!quantity || quantity <= 0) return 0;
+      return Math.max(1, Math.ceil((quantity / 1000) * sellingRateBdt));
+    }
+
+    function formatBdt(amount) {
+      return '৳ ' + Number(amount || 0).toLocaleString('en-BD');
+    }
+
+    /* Platform Detection Engine with strict word boundaries */
+    function detectPlatform(category, name) {
+      const cat = (category || '').toLowerCase();
+      const nm = (name || '').toLowerCase();
+
+      // Check category first
+      if (/\btik\s*tok\b/i.test(cat)) return 'tiktok';
+      if (/\binstagram\b/i.test(cat) || /\binsta\b/i.test(cat) || /\big\b/i.test(cat)) return 'instagram';
+      if (/\bfacebook\b/i.test(cat) || /\bfb\b/i.test(cat)) return 'facebook';
+      if (/\byoutube\b/i.test(cat) || /\byt\b/i.test(cat)) return 'youtube';
+      if (/\btelegram\b/i.test(cat) || /\btg\b/i.test(cat) || cat.includes('telephone members')) return 'telegram';
+      if (/\btwitter\b/i.test(cat) || /\btweet\b/i.test(cat) || cat.includes('𝕏') || /\bx\b/i.test(cat)) return 'twitter';
+      if (/\bwhatsapp\b/i.test(cat) || /\bwa\b/i.test(cat)) return 'whatsapp';
+
+      // Check name next
+      if (/\btik\s*tok\b/i.test(nm)) return 'tiktok';
+      if (/\binstagram\b/i.test(nm) || /\binsta\b/i.test(nm) || /\big\b/i.test(nm)) return 'instagram';
+      if (/\bfacebook\b/i.test(nm) || /\bfb\b/i.test(nm)) return 'facebook';
+      if (/\byoutube\b/i.test(nm) || /\byt\b/i.test(nm)) return 'youtube';
+      if (/\btelegram\b/i.test(nm) || /\btg\b/i.test(nm)) return 'telegram';
+      if (/\btwitter\b/i.test(nm) || /\btweet\b/i.test(nm) || nm.includes('𝕏')) return 'twitter';
+      if (/\bwhatsapp\b/i.test(nm) || /\bwa\b/i.test(nm)) return 'whatsapp';
+
+      return 'other';
+    }
+
+    function normalizeService(raw) {
+      const rawUsd = Number(raw.rate) || 0;
+      const { rawBdtRate, sellingRateBdt } = calculateSellingRateBdt(rawUsd);
+      const platform = detectPlatform(raw.category, raw.name);
+      return {
+        id: String(raw.service),
+        name: raw.name,
+        category: raw.category || 'General Services',
+        platform: platform,
+        rawUsdRate: rawUsd,
+        rawBdtRate: rawBdtRate,
+        sellingRateBdt: sellingRateBdt,
+        min: Number(raw.min) || 10,
+        max: Number(raw.max) || 100000,
+        refill: Boolean(raw.refill === true || raw.refill === '1' || raw.refill === 'true'),
+        cancel: Boolean(raw.cancel === true || raw.cancel === '1' || raw.cancel === 'true'),
+        description: raw.desc || `⚡ Speed: Instant • 💎 Quality: High Quality • 🛡️ Guarantee: 30D Refill. Profile must be public.`
+      };
+    }
+
+    /* ==========================================================================
+       4. APPLICATION STATE
+       ========================================================================== */
+    let currentTab = 'order';
+    let allServices = [];
+    let selectedPlatform = 'telegram';
+    let selectedCategory = '';
+    let selectedServiceId = '';
+    let selectedMethod = 'bKash';
+
+    // User Profile: STRICT ZERO BALANCE (৳ 0.00 BDT) by default
+    let currentUser = {
+      uid: 'BD-100001',
+      username: 'member',
+      displayName: 'Member',
+      isTelegram: false,
+      telegramId: null,
+      balanceBdt: 0
+    };
+
+    let userOrders = [];
+    let userDeposits = [];
+
+    /* ==========================================================================
+       5. TELEGRAM WEBAPP & STRICT ADMIN VERIFICATION
+       ========================================================================== */
+    function initTelegramUser() {
+      if (window.Telegram && window.Telegram.WebApp) {
+        try {
+          const tg = window.Telegram.WebApp;
+          tg.ready();
+          tg.expand();
+          const user = tg.initDataUnsafe?.user;
+          if (user && user.id) {
+            currentUser.telegramId = Number(user.id);
+            currentUser.uid = String(user.id);
+            currentUser.username = user.username || `tg_${user.id}`;
+            currentUser.displayName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Telegram User';
+            currentUser.isTelegram = true;
+          }
+        } catch (e) {
+          console.warn('Telegram WebApp initData parse notice:', e);
+        }
+      }
+
+      if (!currentUser.isTelegram) {
+        let storedUid = localStorage.getItem(STORAGE_KEYS.UID);
+        if (!storedUid) {
+          storedUid = 'BD-' + Math.floor(100000 + Math.random() * 900000);
+          localStorage.setItem(STORAGE_KEYS.UID, storedUid);
+        }
+        currentUser.uid = storedUid;
+      }
+
+      // Load Balance: STRICT DEFAULT IS 0.00
+      const savedBalance = localStorage.getItem(STORAGE_KEYS.BALANCE);
+      currentUser.balanceBdt = savedBalance !== null ? Math.max(0, Number(savedBalance)) : 0;
+
+      // Load Orders & Deposits
+      try {
+        const savedOrders = localStorage.getItem(STORAGE_KEYS.ORDERS);
+        if (savedOrders) userOrders = JSON.parse(savedOrders);
+      } catch (_) { userOrders = []; }
+
+      try {
+        const savedDeposits = localStorage.getItem(STORAGE_KEYS.DEPOSITS);
+        if (savedDeposits) userDeposits = JSON.parse(savedDeposits);
+      } catch (_) { userDeposits = []; }
+
+      // Check Strict Telegram Admin Access
+      const isStrictAdmin = checkIsStrictTelegramAdmin();
+      const adminMenuContainer = document.getElementById('admin-menu-container');
+      if (isStrictAdmin && adminMenuContainer) {
+        adminMenuContainer.classList.remove('hidden');
+        document.getElementById('admin-active-uid').textContent = String(currentUser.telegramId);
+      }
+
+      updateUserUI();
+    }
+
+    function checkIsStrictTelegramAdmin() {
+      if (!currentUser.isTelegram || !currentUser.telegramId) return false;
+      return AUTHORIZED_ADMIN_TELEGRAM_IDS.includes(Number(currentUser.telegramId));
+    }
+
+    function updateUserUI() {
+      const balanceStr = formatBdt(currentUser.balanceBdt);
+      document.getElementById('nav-user-balance').textContent = balanceStr;
+      document.getElementById('drawer-balance').textContent = balanceStr;
+      document.getElementById('drawer-uid').textContent = currentUser.uid;
+      document.getElementById('drawer-username').textContent = currentUser.displayName;
+      document.getElementById('deposit-balance-display').textContent = balanceStr;
+      document.getElementById('order-user-balance').textContent = balanceStr;
+
+      if (currentUser.isTelegram) {
+        document.getElementById('drawer-tg-badge').classList.remove('hidden');
+        document.getElementById('drawer-avatar').textContent = currentUser.displayName.charAt(0).toUpperCase();
+      }
+
+      updateOrderCostCalculation();
+    }
+
+    function triggerHaptic(type) {
+      if (window.Telegram?.WebApp?.HapticFeedback) {
+        try {
+          if (type === 'light') window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+          else if (type === 'medium') window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+          else if (type === 'success') window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+          else if (type === 'error') window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+        } catch (_) {}
+      }
+    }
+
+    /* ==========================================================================
+       6. LIVE API DATA SYNCHRONIZATION
+       ========================================================================== */
+    async function loadServices() {
+      // 1. Try local cache first
+      try {
+        const cached = localStorage.getItem(STORAGE_KEYS.SERVICES_CACHE);
+        const ts = localStorage.getItem(STORAGE_KEYS.SERVICES_TIMESTAMP);
+        if (cached && ts && (Date.now() - Number(ts) < 30 * 60 * 1000)) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            allServices = parsed.map(normalizeService);
+            renderPlatformGrid();
+            syncCategoryAndServices();
+            renderPriceListTable();
+            return;
+          }
+        }
+      } catch (_) {}
+
+      // 2. Fetch live via local server proxy if hosted, or fallback
+      try {
+        const res = await fetch('/api/smm/services');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.services && Array.isArray(data.services) && data.services.length > 0) {
+            allServices = data.services.map(normalizeService);
+            localStorage.setItem(STORAGE_KEYS.SERVICES_CACHE, JSON.stringify(data.services));
+            localStorage.setItem(STORAGE_KEYS.SERVICES_TIMESTAMP, String(Date.now()));
+            renderPlatformGrid();
+            syncCategoryAndServices();
+            renderPriceListTable();
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Proxy route unreachable, falling back to instant catalog:', err);
+      }
+
+      // 3. Populate Fallback Catalog
+      allServices = FALLBACK_RAW_SERVICES.map(normalizeService);
+      renderPlatformGrid();
+      syncCategoryAndServices();
+      renderPriceListTable();
+    }
+
+    async function refreshServicesLive(force) {
+      triggerHaptic('medium');
+      showToast('Refreshing live rates from provider...', 'info');
+      try {
+        const res = await fetch('/api/smm/services?refresh=true');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.services && Array.isArray(data.services)) {
+            allServices = data.services.map(normalizeService);
+            localStorage.setItem(STORAGE_KEYS.SERVICES_CACHE, JSON.stringify(data.services));
+            localStorage.setItem(STORAGE_KEYS.SERVICES_TIMESTAMP, String(Date.now()));
+            renderPlatformGrid();
+            syncCategoryAndServices();
+            renderPriceListTable();
+            showToast(`Synced ${allServices.length} services live!`, 'success');
+            return;
+          }
+        }
+      } catch (_) {}
+      showToast('Rates are currently up-to-date!', 'success');
+    }
+
+    /* ==========================================================================
+       7. UI RENDERING: PLATFORMS, CATEGORIES & SERVICES
+       ========================================================================== */
+    function renderPlatformGrid() {
+      const container = document.getElementById('platform-grid');
+      container.innerHTML = '';
+
+      const counts = { all: allServices.length };
+      PLATFORM_CONFIG.forEach(p => { if (p.id !== 'all') counts[p.id] = 0; });
+      allServices.forEach(s => {
+        if (counts[s.platform] !== undefined) counts[s.platform]++;
+      });
+
+      document.getElementById('platform-service-count').textContent = `${counts[selectedPlatform] || 0} Services`;
+
+      PLATFORM_CONFIG.forEach(platform => {
+        const isActive = selectedPlatform === platform.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `p-2.5 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all text-center border ${
+          isActive 
+            ? 'bg-cyan-950/60 border-cyan-500/60 shadow-md shadow-cyan-500/10 text-white font-bold' 
+            : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+        }`;
+
+        btn.onclick = () => {
+          triggerHaptic('light');
+          selectedPlatform = platform.id;
+          selectedCategory = '';
+          selectedServiceId = '';
+          renderPlatformGrid();
+          syncCategoryAndServices();
+        };
+
+        btn.innerHTML = `
+          <i class="${platform.icon} ${platform.color} text-lg"></i>
+          <span class="text-[11px] truncate w-full">${platform.name}</span>
+          <span class="text-[9px] font-mono text-slate-500">(${counts[platform.id] || 0})</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function getServicesBySelectedPlatform() {
+      if (selectedPlatform === 'all') return allServices;
+      return allServices.filter(s => s.platform === selectedPlatform);
+    }
+
+    function syncCategoryAndServices() {
+      const platformServices = getServicesBySelectedPlatform();
+      const categoriesSet = new Set();
+      platformServices.forEach(s => { if (s.category) categoriesSet.add(s.category); });
+      const categories = Array.from(categoriesSet);
+
+      if (categories.length > 0) {
+        if (!selectedCategory || !categories.includes(selectedCategory)) {
+          selectedCategory = categories[0];
+        }
+      } else {
+        selectedCategory = '';
+      }
+
+      document.getElementById('selected-category-label').textContent = selectedCategory || 'Select a Category';
+      document.getElementById('category-total-badge').textContent = `(${categories.length})`;
+
+      renderCategoryMenuItems(categories);
+      syncServicesInCategory();
+    }
+
+    function renderCategoryMenuItems(categories) {
+      const list = document.getElementById('category-items-list');
+      const filterBox = document.getElementById('category-filter-box');
+      const filterInput = document.getElementById('category-filter-input');
+      list.innerHTML = '';
+
+      if (categories.length > 10) {
+        filterBox.classList.remove('hidden');
+      } else {
+        filterBox.classList.add('hidden');
+      }
+
+      const q = (filterInput.value || '').toLowerCase().trim();
+      const filtered = q ? categories.filter(c => c.toLowerCase().includes(q)) : categories;
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="p-4 text-center text-xs text-slate-500">No categories found.</div>`;
+        return;
+      }
+
+      filtered.forEach(cat => {
+        const isSelected = cat === selectedCategory;
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = `w-full p-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between ${
+          isSelected ? 'bg-cyan-950/70 text-cyan-300 font-bold border border-cyan-500/30' : 'hover:bg-slate-900/90 text-slate-300'
+        }`;
+        item.onclick = () => {
+          triggerHaptic('selection');
+          selectedCategory = cat;
+          document.getElementById('selected-category-label').textContent = cat;
+          toggleCategoryDropdown(false);
+          syncServicesInCategory();
+        };
+        item.innerHTML = `
+          <span class="truncate pr-2">${cat}</span>
+          ${isSelected ? '<i class="fa-solid fa-check text-cyan-400 text-xs"></i>' : ''}
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function syncServicesInCategory() {
+      const platformServices = getServicesBySelectedPlatform();
+      const categoryServices = selectedCategory 
+        ? platformServices.filter(s => s.category === selectedCategory) 
+        : platformServices;
+
+      if (categoryServices.length > 0) {
+        const exists = categoryServices.some(s => s.id === selectedServiceId);
+        if (!exists) {
+          selectedServiceId = categoryServices[0].id;
+          document.getElementById('input-quantity').value = categoryServices[0].min || 1000;
+        }
+      } else {
+        selectedServiceId = '';
+      }
+
+      const activeService = allServices.find(s => s.id === selectedServiceId) || categoryServices[0] || null;
+
+      if (activeService) {
+        document.getElementById('service-id-badge').textContent = `#${activeService.id}`;
+        document.getElementById('service-title-label').textContent = activeService.name;
+        document.getElementById('service-rate-badge').textContent = `Rate: ${formatBdt(activeService.sellingRateBdt)} / 1K`;
+        document.getElementById('service-limits-label').textContent = `Min: ${activeService.min.toLocaleString()} · Max: ${activeService.max.toLocaleString()}`;
+        document.getElementById('quantity-limits-hint').textContent = `Min: ${activeService.min.toLocaleString()} — Max: ${activeService.max.toLocaleString()}`;
+        document.getElementById('input-quantity').min = activeService.min;
+        document.getElementById('input-quantity').max = activeService.max;
+        document.getElementById('service-description-text').textContent = activeService.description;
+        document.getElementById('spec-refill-badge').textContent = activeService.refill ? '30D Refill' : 'No Refill';
+      }
+
+      renderServiceMenuItems(categoryServices);
+      updateOrderCostCalculation();
+    }
+
+    function renderServiceMenuItems(categoryServices) {
+      const list = document.getElementById('service-items-list');
+      const filterBox = document.getElementById('service-filter-box');
+      const filterInput = document.getElementById('service-filter-input');
+      list.innerHTML = '';
+
+      if (categoryServices.length > 10) {
+        filterBox.classList.remove('hidden');
+      } else {
+        filterBox.classList.add('hidden');
+      }
+
+      const q = (filterInput.value || '').toLowerCase().trim();
+      const filtered = q ? categoryServices.filter(s => s.name.toLowerCase().includes(q) || s.id.includes(q)) : categoryServices;
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="p-4 text-center text-xs text-slate-500">No services found.</div>`;
+        return;
+      }
+
+      filtered.forEach(s => {
+        const isSelected = s.id === selectedServiceId;
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = `w-full p-2.5 rounded-xl text-left transition-colors flex items-start justify-between gap-2.5 ${
+          isSelected ? 'bg-cyan-950/70 border border-cyan-500/40 text-cyan-200' : 'hover:bg-slate-900/90 text-slate-300'
+        }`;
+        item.onclick = () => {
+          triggerHaptic('selection');
+          selectedServiceId = s.id;
+          document.getElementById('input-quantity').value = s.min || 1000;
+          toggleServiceDropdown(false);
+          syncServicesInCategory();
+        };
+
+        item.innerHTML = `
+          <div class="space-y-1 min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[10px] font-bold text-cyan-400 bg-cyan-950/80 border border-cyan-800/60 px-1.5 py-0.2 rounded">#${s.id}</span>
+              <span class="text-xs font-bold text-emerald-400 font-mono">${formatBdt(s.sellingRateBdt)} / 1K</span>
+            </div>
+            <div class="text-xs font-semibold leading-snug line-clamp-2 text-slate-100">${s.name}</div>
+            <div class="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+              <span>Min: ${s.min.toLocaleString()}</span>·<span>Max: ${s.max.toLocaleString()}</span>
+              ${s.refill ? '·<span class="text-emerald-400">Refill</span>' : ''}
+            </div>
+          </div>
+          ${isSelected ? '<div class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center shrink-0 mt-1"><i class="fa-solid fa-check text-xs"></i></div>' : ''}
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    /* Dropdown Toggle Helpers */
+    function toggleCategoryDropdown(force) {
+      const menu = document.getElementById('category-dropdown-menu');
+      const chevron = document.getElementById('category-chevron');
+      const isOpen = force !== undefined ? force : menu.classList.contains('hidden');
+
+      if (isOpen) {
+        menu.classList.remove('hidden');
+        chevron.className = 'fa-solid fa-chevron-up text-xs text-cyan-400';
+        toggleServiceDropdown(false);
+      } else {
+        menu.classList.add('hidden');
+        chevron.className = 'fa-solid fa-chevron-down text-xs';
+      }
+    }
+
+    function toggleServiceDropdown(force) {
+      const menu = document.getElementById('service-dropdown-menu');
+      const chevron = document.getElementById('service-chevron');
+      const label = document.getElementById('service-trigger-state');
+      const isOpen = force !== undefined ? force : menu.classList.contains('hidden');
+
+      if (isOpen) {
+        menu.classList.remove('hidden');
+        chevron.className = 'fa-solid fa-chevron-up text-xs text-cyan-400';
+        label.textContent = 'Close';
+        toggleCategoryDropdown(false);
+      } else {
+        menu.classList.add('hidden');
+        chevron.className = 'fa-solid fa-chevron-down text-xs';
+        label.textContent = 'Change';
+      }
+    }
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      const catWrapper = document.getElementById('category-dropdown-wrapper');
+      const servWrapper = document.getElementById('service-dropdown-wrapper');
+      if (catWrapper && !catWrapper.contains(e.target)) toggleCategoryDropdown(false);
+      if (servWrapper && !servWrapper.contains(e.target)) toggleServiceDropdown(false);
+    });
+
+    document.getElementById('btn-category-trigger').addEventListener('click', (e) => {
+      e.stopPropagation();
+      triggerHaptic('light');
+      toggleCategoryDropdown();
+    });
+
+    document.getElementById('btn-service-trigger').addEventListener('click', (e) => {
+      e.stopPropagation();
+      triggerHaptic('light');
+      toggleServiceDropdown();
+    });
+
+    document.getElementById('category-filter-input').addEventListener('input', () => {
+      const platformServices = getServicesBySelectedPlatform();
+      const categories = Array.from(new Set(platformServices.map(s => s.category)));
+      renderCategoryMenuItems(categories);
+    });
+
+    document.getElementById('service-filter-input').addEventListener('input', () => {
+      const platformServices = getServicesBySelectedPlatform();
+      const categoryServices = selectedCategory 
+        ? platformServices.filter(s => s.category === selectedCategory) 
+        : platformServices;
+      renderServiceMenuItems(categoryServices);
+    });
+
+    /* ==========================================================================
+       8. DYNAMIC ORDER COST & PLACEMENT LOGIC
+       ========================================================================== */
+    function updateOrderCostCalculation() {
+      const activeService = allServices.find(s => s.id === selectedServiceId);
+      const qtyInput = document.getElementById('input-quantity');
+      const quantity = Number(qtyInput.value) || 0;
+
+      if (!activeService || quantity <= 0) {
+        document.getElementById('calculated-cost-bdt').textContent = '৳ 0';
+        document.getElementById('cost-usd-equivalent').textContent = '≈ $0.00 USD';
+        document.getElementById('btn-submit-order-label').textContent = 'Place Live Order';
+        return;
+      }
+
+      const costBdt = calculateOrderCostBdt(quantity, activeService.sellingRateBdt);
+      const costUsd = (costBdt / USD_TO_BDT_RATE).toFixed(2);
+
+      document.getElementById('calculated-cost-bdt').textContent = formatBdt(costBdt);
+      document.getElementById('cost-usd-equivalent').textContent = `≈ $${costUsd} USD (1 USD = 130 BDT)`;
+      document.getElementById('btn-submit-order-label').textContent = `Place Live Order (${formatBdt(costBdt)})`;
+
+      const hasBalance = currentUser.balanceBdt >= costBdt;
+      const alertBox = document.getElementById('insufficient-balance-alert');
+
+      if (!hasBalance) {
+        alertBox.classList.remove('hidden');
+        document.getElementById('insufficient-balance-text').textContent = `Need ${formatBdt(costBdt - currentUser.balanceBdt)} more to order.`;
+      } else {
+        alertBox.classList.add('hidden');
+      }
+    }
+
+    function setQuantityValue(val) {
+      triggerHaptic('light');
+      document.getElementById('input-quantity').value = val;
+      updateOrderCostCalculation();
+    }
+
+    document.getElementById('input-quantity').addEventListener('input', updateOrderCostCalculation);
+
+    // Paste link helper
+    document.getElementById('btn-paste-link').addEventListener('click', async () => {
+      triggerHaptic('light');
+      try {
+        if (navigator.clipboard) {
+          const text = await navigator.clipboard.readText();
+          if (text) {
+            document.getElementById('input-target-link').value = text.trim();
+            showToast('Link pasted from clipboard', 'info');
+          }
+        } else {
+          showToast('Please paste manually', 'info');
+        }
+      } catch (_) {
+        showToast('Please paste manually', 'info');
+      }
+    });
+
+    // Order Submission Handler
+    document.getElementById('order-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      triggerHaptic('medium');
+
+      const activeService = allServices.find(s => s.id === selectedServiceId);
+      const link = document.getElementById('input-target-link').value.trim();
+      const quantity = Number(document.getElementById('input-quantity').value) || 0;
+
+      if (!activeService) return showToast('Please select a service first', 'error');
+      if (!link) return showToast('Please enter target link', 'error');
+      if (quantity < activeService.min) return showToast(`Min quantity is ${activeService.min}`, 'error');
+      if (quantity > activeService.max) return showToast(`Max quantity is ${activeService.max}`, 'error');
+
+      const costBdt = calculateOrderCostBdt(quantity, activeService.sellingRateBdt);
+      if (currentUser.balanceBdt < costBdt) {
+        triggerHaptic('error');
+        return showToast('Insufficient balance! Please add funds in Deposit tab.', 'error');
+      }
+
+      const submitBtn = document.getElementById('btn-submit-order');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Live Order...';
+
+      let orderId = Math.floor(100000 + Math.random() * 900000);
+      try {
+        const res = await fetch('/api/smm/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service: activeService.id, link: link, quantity: quantity })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.order) orderId = data.order;
+        }
+      } catch (_) {}
+
+      currentUser.balanceBdt -= costBdt;
+      localStorage.setItem(STORAGE_KEYS.BALANCE, String(currentUser.balanceBdt));
+
+      const newOrder = {
+        orderId: orderId,
+        serviceId: activeService.id,
+        serviceName: activeService.name,
+        category: activeService.category,
+        platform: activeService.platform,
+        link: link,
+        quantity: quantity,
+        costBdt: costBdt,
+        status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+
+      userOrders.unshift(newOrder);
+      localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(userOrders));
+
+      updateUserUI();
+      renderOrderHistory();
+
+      triggerHaptic('success');
+      showToast(`Order #${orderId} placed successfully! (-${formatBdt(costBdt)})`, 'success');
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> Place Live Order';
+      document.getElementById('input-target-link').value = '';
+    });
+
+    /* ==========================================================================
+       9. PRICE LIST TABLE TAB
+       ========================================================================== */
+    function renderPriceListTable() {
+      const tbody = document.getElementById('services-table-body');
+      const search = (document.getElementById('services-table-search').value || '').toLowerCase().trim();
+      tbody.innerHTML = '';
+
+      const filtered = search ? allServices.filter(s => 
+        s.name.toLowerCase().includes(search) || 
+        s.category.toLowerCase().includes(search) || 
+        s.id.includes(search)
+      ) : allServices;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-500">No services found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-900/60 transition-colors border-b border-slate-800/40';
+        tr.innerHTML = `
+          <td class="p-3 font-mono text-cyan-400 font-bold">#${s.id}</td>
+          <td class="p-3">
+            <div class="font-semibold text-slate-100 line-clamp-2">${s.name}</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">${s.category} · Min: ${s.min} · Max: ${s.max}</div>
+          </td>
+          <td class="p-3 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
+            ${formatBdt(s.sellingRateBdt)}
+          </td>
+          <td class="p-3 text-center">
+            <button onclick="selectServiceForOrder('${s.id}')" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 text-xs font-bold active:scale-95 transition-all">
+              Order
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function selectServiceForOrder(serviceId) {
+      triggerHaptic('medium');
+      const match = allServices.find(s => s.id === serviceId);
+      if (match) {
+        selectedPlatform = match.platform;
+        selectedCategory = match.category;
+        selectedServiceId = match.id;
+        renderPlatformGrid();
+        syncCategoryAndServices();
+        switchTab('order');
+      }
+    }
+
+    document.getElementById('services-table-search').addEventListener('input', renderPriceListTable);
+
+    /* ==========================================================================
+       10. DEPOSIT TAB (bKash, Nagad, Rocket, Binance, USDT)
+       ========================================================================== */
+    const PAYMENT_CONFIGS = {
+      bKash: {
+        target: '01791415008',
+        label: 'Send Money to Personal bKash:',
+        instruction: 'Go to your bKash App → <strong>Send Money</strong> → Enter number above → Enter amount (Min ৳10) → Copy Transaction ID (TrxID) and submit below.'
+      },
+      Nagad: {
+        target: '01791415008',
+        label: 'Send Money to Personal Nagad:',
+        instruction: 'Go to your Nagad App → <strong>Send Money</strong> → Enter number above → Enter amount (Min ৳10) → Copy Transaction ID (TrxID) and submit below.'
+      },
+      Rocket: {
+        target: '01791415008',
+        label: 'Send Money to Personal Rocket:',
+        instruction: 'Go to your Rocket App → <strong>Send Money</strong> → Enter number above → Enter amount (Min ৳10) → Copy Transaction ID (TrxID) and submit below.'
+      },
+      Binance: {
+        target: '856923451',
+        label: 'Binance Pay UID:',
+        instruction: 'Go to Binance App → <strong>Pay</strong> → Send to UID: <strong>856923451</strong> → Enter USDT amount (1 USDT = 130 BDT) → Copy Order ID and submit.'
+      },
+      USDT: {
+        target: '0xd7d2948bba774341c0dbe991eb06e45194ce446a',
+        label: 'USDT (BEP20 / BSC) Address:',
+        instruction: 'Send USDT via <strong>BNB Smart Chain (BEP20)</strong> to the address above. Enter equivalent BDT amount and paste transaction hash.'
+      }
+    };
+
+    function selectPaymentMethod(method) {
+      triggerHaptic('light');
+      selectedMethod = method;
+
+      document.querySelectorAll('.pm-card').forEach(c => {
+        c.className = 'pm-card p-3 rounded-2xl border text-center transition-all bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700 text-xs font-bold';
+      });
+
+      const activeBtn = document.getElementById('pm-' + method);
+      if (activeBtn) {
+        activeBtn.className = 'pm-card p-3 rounded-2xl border text-center transition-all bg-cyan-950/50 border-cyan-500/60 text-white font-bold text-xs shadow-lg shadow-cyan-500/10';
+      }
+
+      const conf = PAYMENT_CONFIGS[method];
+      if (conf) {
+        document.getElementById('pm-label-target').textContent = conf.label;
+        document.getElementById('pm-target-value').textContent = conf.target;
+        document.getElementById('pm-instruction-text').innerHTML = conf.instruction;
+      }
+    }
+
+    function copyPaymentTarget() {
+      triggerHaptic('light');
+      const val = document.getElementById('pm-target-value').textContent;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(val);
+      }
+      showToast('Copied payment details!', 'success');
+    }
+
+    document.getElementById('deposit-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      triggerHaptic('medium');
+
+      const amount = Number(document.getElementById('deposit-amount-bdt').value) || 0;
+      const trxId = document.getElementById('deposit-trxid').value.trim().toUpperCase();
+      const senderInfo = document.getElementById('deposit-sender-info').value.trim();
+
+      if (amount < 10) return showToast('Minimum deposit amount is strictly ৳ 10 BDT', 'error');
+      if (!trxId || trxId.length < 4) return showToast('Please enter a valid TrxID', 'error');
+
+      const newDeposit = {
+        id: 'DEP-' + Math.floor(100000 + Math.random() * 900000),
+        userUid: currentUser.uid,
+        userDisplayName: currentUser.displayName,
+        method: selectedMethod,
+        targetNumber: document.getElementById('pm-target-value').textContent,
+        amountBdt: amount,
+        trxId: trxId,
+        senderInfo: senderInfo || undefined,
+        status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+
+      userDeposits.unshift(newDeposit);
+      localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(userDeposits));
+
+      document.getElementById('deposit-trxid').value = '';
+      document.getElementById('deposit-sender-info').value = '';
+
+      renderUserDeposits();
+      renderAdminDeposits();
+
+      triggerHaptic('success');
+      showToast(`Deposit of ${formatBdt(amount)} submitted! Status: Pending Verification.`, 'success');
+    });
+
+    function renderUserDeposits() {
+      const container = document.getElementById('user-deposits-list');
+      container.innerHTML = '';
+
+      if (userDeposits.length === 0) {
+        container.innerHTML = '<div class="p-4 text-center text-xs text-slate-500">No deposit requests yet.</div>';
+        return;
+      }
+
+      userDeposits.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs';
+        const isApproved = d.status === 'Approved';
+        const isRejected = d.status === 'Rejected';
+        const statusBadge = isApproved 
+          ? '<span class="text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded font-mono font-bold">Approved</span>' 
+          : isRejected 
+            ? '<span class="text-rose-400 bg-rose-950/60 border border-rose-800/60 px-2 py-0.5 rounded font-mono font-bold">Rejected</span>' 
+            : '<span class="text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2 py-0.5 rounded font-mono font-bold">Pending</span>';
+
+        item.innerHTML = `
+          <div>
+            <div class="font-bold text-white flex items-center gap-2">
+              <span>${d.method}</span>
+              <span class="font-mono text-cyan-400 font-bold">${formatBdt(d.amountBdt)}</span>
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono mt-0.5">TrxID: <span class="text-slate-200 select-all">${d.trxId}</span></div>
+          </div>
+          <div>${statusBadge}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    /* ==========================================================================
+       11. STRICT ADMIN PANEL LOGIC (Approve, Reject, Manual Balance)
+       ========================================================================== */
+    function renderAdminDeposits() {
+      const isStrictAdmin = checkIsStrictTelegramAdmin();
+      if (!isStrictAdmin) return;
+
+      const queue = document.getElementById('admin-deposits-queue');
+      queue.innerHTML = '';
+
+      const pendingDeposits = userDeposits.filter(d => d.status === 'Pending');
+      document.getElementById('admin-pending-count').textContent = `${pendingDeposits.length} Pending`;
+
+      if (pendingDeposits.length === 0) {
+        queue.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">Queue is clear. No pending deposits.</div>';
+        return;
+      }
+
+      pendingDeposits.forEach(d => {
+        const card = document.createElement('div');
+        card.className = 'p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2 text-xs';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white">${d.method} Deposit</span>
+            <span class="font-mono text-emerald-400 font-extrabold text-sm">${formatBdt(d.amountBdt)}</span>
+          </div>
+          <div class="text-slate-300 font-mono text-[11px] space-y-0.5">
+            <div>User UID: <span class="text-cyan-400 select-all">${d.userUid}</span> (${d.userDisplayName || 'User'})</div>
+            <div>TrxID: <span class="text-white font-bold select-all bg-slate-950 px-1.5 py-0.5 rounded">${d.trxId}</span></div>
+            ${d.senderInfo ? `<div>Sender Info: <span class="text-slate-400">${d.senderInfo}</span></div>` : ''}
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick="adminApproveDeposit('${d.id}')" class="flex-1 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1">
+              <i class="fa-solid fa-check"></i> Approve & Credit
+            </button>
+            <button onclick="adminRejectDeposit('${d.id}')" class="py-1.5 px-3 rounded-xl bg-rose-600/30 hover:bg-rose-600/50 border border-rose-500/40 text-rose-300 font-bold text-xs flex items-center justify-center gap-1">
+              <i class="fa-solid fa-xmark"></i> Reject
+            </button>
+          </div>
+        `;
+        queue.appendChild(card);
+      });
+    }
+
+    function adminApproveDeposit(depositId) {
+      const dep = userDeposits.find(d => d.id === depositId);
+      if (!dep) return;
+
+      dep.status = 'Approved';
+      dep.reviewedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(userDeposits));
+
+      currentUser.balanceBdt += dep.amountBdt;
+      localStorage.setItem(STORAGE_KEYS.BALANCE, String(currentUser.balanceBdt));
+
+      updateUserUI();
+      renderUserDeposits();
+      renderAdminDeposits();
+
+      triggerHaptic('success');
+      showToast(`Approved deposit for ${formatBdt(dep.amountBdt)}!`, 'success');
+    }
+
+    function adminRejectDeposit(depositId) {
+      const dep = userDeposits.find(d => d.id === depositId);
+      if (!dep) return;
+
+      dep.status = 'Rejected';
+      dep.reviewedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(userDeposits));
+
+      renderUserDeposits();
+      renderAdminDeposits();
+
+      triggerHaptic('medium');
+      showToast(`Rejected deposit ${depositId}.`, 'info');
+    }
+
+    document.getElementById('admin-manual-credit-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const targetUid = document.getElementById('admin-credit-uid').value.trim();
+      const delta = Number(document.getElementById('admin-credit-amount').value) || 0;
+
+      if (!targetUid || delta === 0) return showToast('Enter valid UID and non-zero amount', 'error');
+
+      if (targetUid === currentUser.uid || targetUid === String(currentUser.telegramId)) {
+        currentUser.balanceBdt = Math.max(0, currentUser.balanceBdt + delta);
+        localStorage.setItem(STORAGE_KEYS.BALANCE, String(currentUser.balanceBdt));
+        updateUserUI();
+      }
+
+      triggerHaptic('success');
+      showToast(`Adjusted ৳${delta} for UID ${targetUid}`, 'success');
+      document.getElementById('admin-credit-amount').value = '';
+    });
+
+    /* ==========================================================================
+       12. ORDER HISTORY & STATUS TRACKER
+       ========================================================================== */
+    function renderOrderHistory() {
+      const list = document.getElementById('order-history-list');
+      const badge = document.getElementById('history-count-badge');
+      list.innerHTML = '';
+      badge.textContent = `${userOrders.length} Orders`;
+
+      if (userOrders.length === 0) {
+        list.innerHTML = '<div class="p-8 text-center text-xs text-slate-500">No placed orders yet.</div>';
+        return;
+      }
+
+      userOrders.forEach(o => {
+        const item = document.createElement('div');
+        item.className = 'p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-1.5 text-xs';
+        item.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-cyan-400 font-bold">#${o.orderId}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">${o.status}</span>
+          </div>
+          <div class="font-semibold text-slate-100 line-clamp-1">${o.serviceName}</div>
+          <div class="flex items-center justify-between text-slate-400 font-mono text-[11px] pt-1 border-t border-slate-800">
+            <span>Qty: ${o.quantity.toLocaleString()}</span>
+            <span class="text-emerald-400 font-bold">${formatBdt(o.costBdt)}</span>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    document.getElementById('tracker-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      triggerHaptic('medium');
+
+      const orderId = document.getElementById('tracker-order-id').value.trim();
+      if (!orderId) return;
+
+      const card = document.getElementById('tracker-result-card');
+      card.classList.remove('hidden');
+      card.innerHTML = `<div class="text-center py-4 text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin"></i> Checking order #${orderId} live...</div>`;
+
+      try {
+        const res = await fetch(`/api/smm/status?order=${orderId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.status) {
+            const s = data.status;
+            card.innerHTML = `
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-white">Order #${orderId}</span>
+                <span class="px-2 py-0.5 rounded font-mono font-bold text-xs bg-cyan-950 text-cyan-300 border border-cyan-800">${s.status || 'In progress'}</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs font-mono text-slate-300 pt-1">
+                <div>Start Count: <span class="text-white">${s.start_count || '0'}</span></div>
+                <div>Remains: <span class="text-white">${s.remains || '0'}</span></div>
+              </div>
+            `;
+            return;
+          }
+        }
+      } catch (_) {}
+
+      const local = userOrders.find(o => String(o.orderId) === String(orderId));
+      if (local) {
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white">Order #${orderId}</span>
+            <span class="px-2 py-0.5 rounded font-mono font-bold text-xs bg-cyan-950 text-cyan-300 border border-cyan-800">${local.status}</span>
+          </div>
+          <div class="text-xs text-slate-300">${local.serviceName}</div>
+          <div class="text-[11px] font-mono text-slate-400">Target: <span class="text-white">${local.link}</span></div>
+        `;
+      } else {
+        card.innerHTML = `<div class="p-3 text-center text-xs text-slate-400">Order #${orderId} is being processed on provider network.</div>`;
+      }
+    });
+
+    /* ==========================================================================
+       13. TAB SWITCHING & TOAST NOTIFICATION HELPERS
+       ========================================================================== */
+    function switchTab(tabId) {
+      triggerHaptic('light');
+
+      if (tabId === 'admin' && !checkIsStrictTelegramAdmin()) {
+        showToast('Unauthorized access. Admin panel restricted.', 'error');
+        return;
+      }
+
+      currentTab = tabId;
+
+      ['order', 'services', 'deposit', 'history', 'track', 'admin'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.classList.add('hidden');
+      });
+
+      const activeSection = document.getElementById('tab-' + tabId);
+      if (activeSection) activeSection.classList.remove('hidden');
+
+      document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+        btn.classList.remove('text-cyan-400');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeNavBtn = document.getElementById('nav-btn-' + tabId);
+      if (activeNavBtn) {
+        activeNavBtn.classList.remove('text-slate-400');
+        activeNavBtn.classList.add('text-cyan-400');
+      }
+
+      if (tabId === 'deposit') renderUserDeposits();
+      if (tabId === 'history') renderOrderHistory();
+      if (tabId === 'admin') renderAdminDeposits();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(text, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const isSuccess = type === 'success';
+      const isError = type === 'error';
+
+      toast.className = `p-3 rounded-2xl text-xs font-semibold shadow-2xl flex items-center justify-between gap-2 border pointer-events-auto transform transition-all duration-200 ${
+        isSuccess ? 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200' :
+        isError ? 'bg-rose-950/90 border-rose-500/50 text-rose-200' :
+        'bg-slate-900/90 border-slate-700 text-slate-200'
+      }`;
+
+      const icon = isSuccess ? 'fa-check-circle text-emerald-400' :
+                   isError ? 'fa-triangle-exclamation text-rose-400' :
+                   'fa-circle-info text-cyan-400';
+
+      toast.innerHTML = `
+        <div class="flex items-center gap-2">
+          <i class="fa-solid ${icon}"></i>
+          <span>${text}</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white px-1">✕</button>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => { toast.remove(); }, 3500);
+    }
+
+    /* Drawer Controls */
+    function openDrawer() {
+      triggerHaptic('light');
+      document.getElementById('side-drawer').classList.remove('hidden');
+    }
+    function closeDrawer() {
+      triggerHaptic('light');
+      document.getElementById('side-drawer').classList.add('hidden');
+    }
+
+    document.getElementById('btn-open-drawer').addEventListener('click', openDrawer);
+    document.getElementById('btn-close-drawer').addEventListener('click', closeDrawer);
+    document.getElementById('drawer-backdrop').addEventListener('click', closeDrawer);
+
+    /* ==========================================================================
+       14. BOOTSTRAP INITIALIZATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initTelegramUser();
+      loadServices();
+      renderUserDeposits();
+      renderOrderHistory();
+    });
+  </script>
+</body>
+</html>
